@@ -6,19 +6,29 @@ frontend/.expo/
 frontend/.expo-shared/
 frontend/dist/
 frontend/web-build/
-frontend/ios/Pods/
-frontend/android/.gradle/
-frontend/android/app/build/
-frontend/.DS_Store
-
-# Expo/Metro cache
 frontend/.metro-cache/
 frontend/.cache/
-
-# npm/yarn logs
+frontend/.DS_Store
+frontend/expo-env.d.ts
 frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
+frontend/.metro-health-check*
+frontend/.tsbuildinfo
+frontend/.env*.local
+frontend/*.pem
+
+# Native (post ejection)
+frontend/ios/Pods/
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/.jks
+frontend/.p8
+frontend/.p12
+frontend/.key
+frontend/.mobileprovision
+frontend/.orig.*
+frontend/.kotlin/
 
 # ====================
 # BACKEND (Python / FastAPI)
@@ -33,10 +43,8 @@ backend/venv/
 backend/.mypy_cache/
 backend/.pytest_cache/
 backend/instance/
-backend/.DS_Store
-
-# Python logs
 backend/*.log
+backend/.DS_Store
 
 # IDE configs
 backend/.vscode/
@@ -52,13 +60,10 @@ Thumbs.db
 *.bak
 *.tmp
 *.orig
-
-# IDE / editor
-.vscode/
-.idea/
+*.orig.*
 *.sublime-workspace
 *.sublime-project
-
-# macOS metadata
+.vscode/
+.idea/
 .AppleDouble
 .LSOverride
