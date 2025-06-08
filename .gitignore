@@ -1,0 +1,64 @@
+# ====================
+# FRONTEND (React Native / Expo)
+# ====================
+frontend/node_modules/
+frontend/.expo/
+frontend/.expo-shared/
+frontend/dist/
+frontend/web-build/
+frontend/ios/Pods/
+frontend/android/.gradle/
+frontend/android/app/build/
+frontend/.DS_Store
+
+# Expo/Metro cache
+frontend/.metro-cache/
+frontend/.cache/
+
+# npm/yarn logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ====================
+# BACKEND (Python / FastAPI)
+# ====================
+backend/__pycache__/
+backend/*.py[cod]
+backend/.Python
+backend/env/
+backend/.env/
+backend/.venv/
+backend/venv/
+backend/.mypy_cache/
+backend/.pytest_cache/
+backend/instance/
+backend/.DS_Store
+
+# Python logs
+backend/*.log
+
+# IDE configs
+backend/.vscode/
+backend/.idea/
+
+# ====================
+# GENERAL / OS-SPECIFIC
+# ====================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+
+# IDE / editor
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# macOS metadata
+.AppleDouble
+.LSOverride
