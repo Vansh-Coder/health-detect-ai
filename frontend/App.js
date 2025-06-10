@@ -1,18 +1,20 @@
-import { View, Text, StyleSheet } from "react-native";
+import "react-native-gesture-handler";
+import "react-native-reanimated";
+import React, { useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import AuthorizedStack from "./stacks/AuthorizedStack";
+import UnauthorizedStack from "./stacks/UnauthorizedStack";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Health Detect AI App!</Text>
-    </View>
-  );
-}
+  const [authenticated, setAuthenticated] = useState(false);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  const renderNavigationStack = () => {
+    if (authenticated) {
+      return <AuthorizedStack />;
+    } else {
+      return <UnauthorizedStack setAuthenticated={setAuthenticated} />;
+    }
+  };
+
+  return <NavigationContainer>{renderNavigationStack()}</NavigationContainer>;
+}
