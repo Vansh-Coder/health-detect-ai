@@ -1,32 +1,17 @@
-// import { View, Text, StyleSheet } from "react-native";
-// import { RFValue } from "react-native-responsive-fontsize";
-
-// const OnboardingScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.body}>Onboarding screen!</Text>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   body: {
-//     fontSize: RFValue(14),
-//   },
-// });
-
-// export default OnboardingScreen;
-import React from "react";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import Carousel, { Pagination } from "react-native-reanimated-carousel";
 import { useSharedValue } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { RFValue } from "react-native-responsive-fontsize";
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const onboardingData = [
   {
@@ -43,7 +28,7 @@ const onboardingData = [
   },
 ];
 
-export default function OnboardingScreen() {
+const OnboardingScreen = ({ navigation }) => {
   const progress = useSharedValue(0);
 
   const renderItem = ({ item }) => (
@@ -53,39 +38,68 @@ export default function OnboardingScreen() {
     </View>
   );
 
-  return (
-    <View style={styles.container}>
-      <Carousel
-        width={SCREEN_WIDTH}
-        height={SCREEN_WIDTH * 1.2}
-        data={onboardingData}
-        loop={false}
-        onProgressChange={progress}
-        scrollAnimationDuration={500}
-        renderItem={renderItem}
-      />
+  const handleSignup = () => {
+    navigation.navigate("Signup");
+  };
 
-      <Pagination.Basic
-        progress={progress}
-        data={onboardingData}
-        dotStyle={styles.dot}
-        activeDotStyle={styles.activeDot}
-        containerStyle={styles.paginationContainer}
-      />
-    </View>
+  const handleLogin = () => {
+    navigation.navigate("Login");
+  };
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={{ flex: 3 }}>
+          <Carousel
+            width={SCREEN_WIDTH}
+            height={SCREEN_HEIGHT * 0.6}
+            data={onboardingData}
+            loop={false}
+            onProgressChange={progress}
+            scrollAnimationDuration={500}
+            renderItem={renderItem}
+          />
+
+          <Pagination.Basic
+            progress={progress}
+            data={onboardingData}
+            dotStyle={styles.dot}
+            activeDotStyle={styles.activeDot}
+            containerStyle={styles.paginationContainer}
+          />
+        </View>
+
+        <View style={styles.lowerContainer}>
+          <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
+            <Text style={styles.signupButtonText}>Create an Account</Text>
+          </TouchableOpacity>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Already have an account ? </Text>
+            <Text style={styles.footerLoginText} onPress={handleLogin}>
+              Login
+            </Text>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "white",
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
   },
   slide: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 24,
+    paddingHorizontal: 10,
   },
   title: {
     fontSize: 24,
@@ -104,11 +118,12 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: "#ccc",
     borderRadius: 5,
+    marginHorizontal: 5,
   },
   activeDot: {
     width: 10,
     height: 10,
-    backgroundColor: "#000",
+    backgroundColor: "black",
     borderRadius: 5,
   },
   paginationContainer: {
@@ -116,4 +131,39 @@ const styles = StyleSheet.create({
     bottom: 40,
     alignSelf: "center",
   },
+  lowerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  signupButton: {
+    borderWidth: 1,
+    borderRadius: 30,
+    borderColor: "black",
+    paddingVertical: 15,
+    width: SCREEN_WIDTH * 0.6,
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  signupButtonText: {
+    fontSize: RFValue(14),
+    color: "white",
+    fontWeight: "600",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: RFValue(12),
+  },
+  footerLoginText: {
+    fontSize: RFValue(12),
+    fontWeight: "600",
+  },
 });
+
+export default OnboardingScreen;
