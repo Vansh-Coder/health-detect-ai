@@ -112,6 +112,7 @@ const SignupScreen = ({ navigation, setAuthenticated }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: "white",
   },
   container: {
     flex: 1,

@@ -63,10 +63,7 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
               By continuing, you agree to our Terms of Service and Privacy
               Policy.
             </Text>
-            <TouchableOpacity
-              style={styles.signupButton}
-              onPress={handleSignup}
-            >
+            <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
               <Text style={styles.signupButtonText}>Login</Text>
             </TouchableOpacity>
             <View style={styles.footer}>
