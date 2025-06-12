@@ -1,12 +1,80 @@
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
+import ResultBar from "../components/ResultBar";
 
-const ResultScreen = () => {
+const { width } = Dimensions.get("window");
+
+const ResultScreen = ({ navigation, route }) => {
+  const { question } = route.params || "";
+
+  const dataResults = [
+    { name: "Disease 1", score: "60.7" },
+    { name: "Disease 2", score: "25.4" },
+    { name: "Disease 3", score: "14.5" },
+  ];
+
+  const dataAnswer = [{ answer: "Okay" }];
+
+  const handleDiagnosis = () => {
+    console.log("Diagnosis pressed!");
+  };
+
+  const handleDownload = () => {
+    console.log("Download pressed!");
+  };
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.container}>
-        <Text style={styles.text}>Result Screen!</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Diagnosis Results</Text>
+        </View>
+        <View style={styles.resultContainer}>
+          <ResultBar name={"Disease 1"} chances={"60.7"} />
+          <ResultBar name={"Disease 2"} chances={"25.4"} />
+          <ResultBar name={"Disease 3"} chances={"14.5"} />
+          {question && question.length > 0 && (
+            <View style={styles.QAContainer}>
+              <Text style={styles.questionText}>Question here</Text>
+              <Text style={styles.answerText}>Answer here</Text>
+            </View>
+          )}
+        </View>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { borderColor: "black", backgroundColor: "black" },
+            ]}
+          >
+            <Text
+              style={[styles.buttonText, { color: "white" }]}
+              onPress={handleDiagnosis}
+            >
+              New Diagnosis
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { borderColor: "gray", backgroundColor: "gray" },
+            ]}
+          >
+            <Text
+              style={[styles.buttonText, { color: "black" }]}
+              onPress={handleDownload}
+            >
+              Download PDF
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -23,8 +91,50 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  text: {
-    fontSize: RFValue(14),
+  titleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleText: {
+    fontSize: RFValue(26),
+    fontWeight: "bold",
+  },
+  resultContainer: {
+    flex: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  QAContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  questionText: {
+    fontSize: RFValue(15),
+    fontWeight: "500",
+    color: "#ccc",
+  },
+  answerText: {
+    fontSize: RFValue(15),
+    fontWeight: "500",
+    color: "black",
+  },
+  buttonsContainer: {
+    flex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    width: width * 0.8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingVertical: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  buttonText: {
+    fontSize: RFValue(17),
     fontWeight: "600",
   },
 });

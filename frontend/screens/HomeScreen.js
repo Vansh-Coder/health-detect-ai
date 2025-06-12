@@ -72,7 +72,10 @@ const HomeScreen = ({ navigation }) => {
   const handleSubmit = () => {
     // save image, run results, and navigate
     console.log("Submit button pressed!");
-    navigation.navigate("HomeStack", { screen: "Result" });
+    navigation.navigate("HomeStack", {
+      screen: "Result",
+      params: { question },
+    });
   };
 
   return (
@@ -134,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
               <TextInput
                 placeholder='Ex. "Is this eczema ?"'
                 style={styles.field}
-                onChangeText={(val) => setQuestion(val)}
+                onChangeText={(val) => setQuestion(val.trim())}
                 autoCapitalize="none"
               />
             </View>
