@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   fieldContainer: {
-    width: width * 0.75,
+    width: width * 0.8,
     borderWidth: 2,
     justifyContent: "center",
     borderRadius: 10,
@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   field: {
-    width: width * 0.75,
+    width: width * 0.8,
     height: RFValue(216),
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     fontSize: RFValue(17),
     textAlignVertical: "top",
   },
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   submitButton: {
     justifyContent: "center",
     alignItems: "center",
-    width: width * 0.75,
+    width: width * 0.8,
     borderWidth: 1,
     borderRadius: 10,
     paddingVertical: 15,

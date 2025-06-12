@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { RFValue } from "react-native-responsive-fontsize";
-import { MaterialIcons, Octicons } from "@expo/vector-icons";
-import HomeScreen from "../screens/HomeScreen";
+import { MaterialIcons } from "@expo/vector-icons";
+import DrawerHeaderOptions from "../components/DrawerHeaderOptions";
+import HomeStack from "./HomeStack";
 import FeedbackScreen from "../screens/FeedbackScreen";
 import AboutScreen from "../screens/AboutScreen";
 import LogoutModal from "../components/LogoutModal";
@@ -49,20 +48,15 @@ const OptionsDrawer = ({ setAuthenticated }) => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={({ navigation }) => ({
         drawerType: "front",
-        headerLeft: () => (
-          <TouchableOpacity
-            style={{ marginLeft: 15 }}
-            onPress={() => navigation.toggleDrawer()}
-          >
-            <Octicons name="three-bars" size={RFValue(18)} color="black" />
-          </TouchableOpacity>
-        ),
+        ...DrawerHeaderOptions(navigation),
       })}
     >
       <Drawer.Screen
-        name="Home"
-        component={HomeScreen}
+        name="HomeStack"
+        component={HomeStack}
         options={{
+          // don't show drawer header for entire nested stack
+          headerShown: false,
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="home" size={size + 2} color={color} />
           ),

@@ -15,7 +15,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const onboardingData = [
   {
-    title: "Welcome to HealthDetect",
+    title: "Welcome to HealthDetect AI",
     image: require("../assets/pic.png"),
   },
   {

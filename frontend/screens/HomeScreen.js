@@ -17,7 +17,7 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [image, setImage] = useState("");
   const [imageAdded, setImageAdded] = useState(false);
   const [question, setQuestion] = useState("");
@@ -72,6 +72,7 @@ const HomeScreen = () => {
   const handleSubmit = () => {
     // save image, run results, and navigate
     console.log("Submit button pressed!");
+    navigation.navigate("HomeStack", { screen: "Result" });
   };
 
   return (
