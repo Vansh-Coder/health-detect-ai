@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import { TouchableOpacity } from "react-native";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { MaterialIcons } from "@expo/vector-icons";
+import { RFValue } from "react-native-responsive-fontsize";
+import { MaterialIcons, Octicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import FeedbackScreen from "../screens/FeedbackScreen";
+import AboutScreen from "../screens/AboutScreen";
 import LogoutModal from "../components/LogoutModal";
 
 const Drawer = createDrawerNavigator();
@@ -44,9 +47,17 @@ const OptionsDrawer = ({ setAuthenticated }) => {
   return (
     <Drawer.Navigator
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         drawerType: "front",
-      }}
+        headerLeft: () => (
+          <TouchableOpacity
+            style={{ marginLeft: 15 }}
+            onPress={() => navigation.toggleDrawer()}
+          >
+            <Octicons name="three-bars" size={RFValue(18)} color="black" />
+          </TouchableOpacity>
+        ),
+      })}
     >
       <Drawer.Screen
         name="Home"
@@ -63,6 +74,15 @@ const OptionsDrawer = ({ setAuthenticated }) => {
         options={{
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="feedback" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="About"
+        component={AboutScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="info-outline" size={size} color={color} />
           ),
         }}
       />
