@@ -34,17 +34,17 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    width: width * 0.8,
     flexDirection: "row",
     marginVertical: 10,
   },
   leftContainer: {
     flex: 1,
+    paddingRight: 10,
   },
   diseaseAndChances: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   diseaseContainer: {
     justifyContent: "center",
@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
   chancesContainer: {
     flex: 1,
     justifyContent: "flex-end",
-    alignItems: "flex-start",
-    paddingLeft: 20,
+    alignItems: "flex-end",
+    paddingBottom: 2,
   },
   chancesText: {
     fontSize: RFValue(13),
@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
   percentageBarContainer: {
     justifyContent: "center",
     alignItems: "flex-start",
-    paddingRight: 15,
     marginTop: 5,
   },
   rightContainer: {

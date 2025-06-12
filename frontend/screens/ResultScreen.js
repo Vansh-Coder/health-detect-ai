@@ -42,8 +42,22 @@ const ResultScreen = ({ navigation, route }) => {
           <ResultBar name={"Disease 3"} chances={"14.5"} />
           {question && question.length > 0 && (
             <View style={styles.QAContainer}>
-              <Text style={styles.questionText}>Question here</Text>
-              <Text style={styles.answerText}>Answer here</Text>
+              <View style={styles.innerContainer}>
+                <View style={styles.markerContainer}>
+                  <Text style={styles.questionText}>Q.</Text>
+                </View>
+                <View style={styles.sentenceContainer}>
+                  <Text style={styles.questionText}>{question}</Text>
+                </View>
+              </View>
+              <View style={styles.innerContainer}>
+                <View style={styles.markerContainer}>
+                  <Text style={styles.answerText}>A.</Text>
+                </View>
+                <View style={styles.sentenceContainer}>
+                  <Text style={styles.answerText}>Answer here</Text>
+                </View>
+              </View>
             </View>
           )}
         </View>
@@ -64,7 +78,7 @@ const ResultScreen = ({ navigation, route }) => {
           <TouchableOpacity
             style={[
               styles.button,
-              { borderColor: "gray", backgroundColor: "gray" },
+              { borderColor: "#c0c0c0", backgroundColor: "#c0c0c0" },
             ]}
           >
             <Text
@@ -104,19 +118,35 @@ const styles = StyleSheet.create({
     flex: 3,
     justifyContent: "center",
     alignItems: "center",
+    width: width * 0.8,
   },
   QAContainer: {
+    width: "100%",
     justifyContent: "center",
+    alignItems: "flex-start",
+    marginTop: 30,
+  },
+  innerContainer: {
+    flexDirection: "row",
+    marginBottom: 5,
+  },
+  markerContainer: {
+    justifyContent: "flex-start",
     alignItems: "center",
+  },
+  sentenceContainer: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingLeft: 10,
   },
   questionText: {
     fontSize: RFValue(15),
-    fontWeight: "500",
-    color: "#ccc",
+    fontWeight: "600",
+    color: "#787878",
   },
   answerText: {
     fontSize: RFValue(15),
-    fontWeight: "500",
+    fontWeight: "600",
     color: "black",
   },
   buttonsContainer: {

@@ -138,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
                 placeholder='Ex. "Is this eczema ?"'
                 style={styles.field}
                 onChangeText={(val) => setQuestion(val.trim())}
-                autoCapitalize="none"
+                maxLength={60}
               />
             </View>
             <TouchableOpacity
