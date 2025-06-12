@@ -255,8 +255,10 @@ const styles = StyleSheet.create({
     fontSize: RFValue(15),
     fontWeight: "500",
     marginBottom: 5,
+    paddingLeft: 5,
   },
   fieldContainer: {
+    width: width * 0.8,
     borderWidth: 2,
     justifyContent: "center",
     borderRadius: 10,
