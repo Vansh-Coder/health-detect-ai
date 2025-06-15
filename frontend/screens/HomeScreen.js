@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
+import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
@@ -21,6 +22,24 @@ const HomeScreen = ({ navigation }) => {
   const [image, setImage] = useState("");
   const [imageAdded, setImageAdded] = useState(false);
   const [question, setQuestion] = useState("");
+
+  const showSuccessToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Image uploaded successfully !",
+      position: "top",
+      topOffset: 60,
+    });
+  };
+
+  const showFailToast = () => {
+    Toast.show({
+      type: "info",
+      text1: "Image removed successfully !",
+      position: "top",
+      topOffset: 60,
+    });
+  };
 
   const handleCamera = async () => {
     // Asking for permission
@@ -44,6 +63,7 @@ const HomeScreen = ({ navigation }) => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       setImageAdded(true);
+      showSuccessToast();
     }
   };
 
@@ -60,13 +80,14 @@ const HomeScreen = ({ navigation }) => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       setImageAdded(true);
+      showSuccessToast();
     }
   };
 
   const handleRemove = () => {
-    // Add toast here
     setImage("");
     setImageAdded(false);
+    showFailToast();
   };
 
   const handleSubmit = () => {
