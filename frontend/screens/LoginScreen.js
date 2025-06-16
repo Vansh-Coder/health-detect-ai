@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
             <Text style={styles.titleText}>Login</Text>
           </View>
           <View style={styles.middleContainer}>
-            <View style={styles.emailFieldContainer}>
+            <View style={styles.fieldContainer}>
               <TextInput
                 style={styles.field}
                 placeholder="Email address"
@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
                 autoCapitalize="none"
               />
             </View>
-            <View style={styles.passwordFieldContainer}>
+            <View style={styles.fieldContainer}>
               <TextInput
                 style={styles.field}
                 placeholder="Password"
@@ -115,27 +115,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  emailFieldContainer: {
+  fieldContainer: {
     borderWidth: 2,
     justifyContent: "center",
     borderRadius: 10,
     borderColor: "#ccc",
     backgroundColor: "white",
-    marginBottom: 20,
+    marginVertical: 10,
   },
   field: {
     width: width * 0.75,
     paddingVertical: 10,
     paddingHorizontal: 20,
     fontSize: RFValue(17),
-  },
-  passwordFieldContainer: {
-    borderWidth: 2,
-    justifyContent: "center",
-    borderRadius: 10,
-    borderColor: "#ccc",
-    backgroundColor: "white",
-    marginBottom: 10,
   },
   forgotPasswordContainer: {
     width: width * 0.75,

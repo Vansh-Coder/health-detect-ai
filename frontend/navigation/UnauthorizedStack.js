@@ -1,9 +1,10 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import ForgotPassHeaderOptions from "../components/ForgotPassHeaderOptions";
+import BlankHeaderOptions from "../components/BlankHeaderOptions";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import EnterOTPScreen from "../screens/EnterOTPScreen";
 
 const Stack = createStackNavigator();
 
@@ -39,15 +40,19 @@ const UnauthorizedStack = ({ setAuthenticated }) => {
       </Stack.Screen>
       <Stack.Screen
         name="ForgotPassword"
+        component={ForgotPasswordScreen}
         options={({ navigation }) => ({
-          ...ForgotPassHeaderOptions(navigation),
+          ...BlankHeaderOptions(navigation),
+        })}
+      />
+      <Stack.Screen
+        name="EnterOTP"
+        options={({ navigation }) => ({
+          ...BlankHeaderOptions(navigation),
         })}
       >
         {(props) => (
-          <ForgotPasswordScreen
-            {...props}
-            setAuthenticated={setAuthenticated}
-          />
+          <EnterOTPScreen {...props} setAuthenticated={setAuthenticated} />
         )}
       </Stack.Screen>
     </Stack.Navigator>
