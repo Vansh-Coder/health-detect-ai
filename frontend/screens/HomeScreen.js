@@ -29,6 +29,10 @@ const HomeScreen = ({ navigation }) => {
       text1: "Image uploaded successfully !",
       position: "top",
       topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
     });
   };
 
@@ -38,6 +42,10 @@ const HomeScreen = ({ navigation }) => {
       text1: "Image removed successfully !",
       position: "top",
       topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
     });
   };
 

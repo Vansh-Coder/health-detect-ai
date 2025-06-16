@@ -38,6 +38,7 @@ backend/*.py[cod]
 backend/.Python
 backend/env/
 backend/.env/
+backend/app/.env
 backend/.venv/
 backend/venv/
 backend/.mypy_cache/

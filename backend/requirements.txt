@@ -5,3 +5,4 @@ torch
 torchvision
 python-multipart
 pillow
+cloudmersive-convert-api-client

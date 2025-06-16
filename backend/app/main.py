@@ -3,10 +3,22 @@ import uuid
 import shutil
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+import cloudmersive_convert_api_client
+from cloudmersive_convert_api_client.rest import ApiException
 from typing import Optional
+import tempfile
 
 from .models import image_classifier, vqa
 from .schemas import ClassificationResult, VQAResult, ImageDiagnosisResult
+
+# Cloudmersive API Key
+CLOUDMERSIVE_API_KEY = os.getenv("CLOUDMERSIVE_API_KEY")
+
+# Cloudmersive API configuration
+configuration = cloudmersive_convert_api_client.Configuration()
+configuration.api_key['Apikey'] = CLOUDMERSIVE_API_KEY
+api_client = cloudmersive_convert_api_client.ApiClient(configuration)
 
 app = FastAPI(title="HealthDetect AI")
 
@@ -71,3 +83,31 @@ async def diagnose_image(
         classification=classification,
         vqa_answer=vqa_answer
     )
+
+@app.post("/api/convert/image-to-pdf")
+async def convert_image_to_pdf(file: UploadFile = File(...)):
+    """
+    Convert an uploaded image to a PDF using Cloudmersive API.
+    """
+    # Save uploaded image to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_image:
+        shutil.copyfileobj(file.file, temp_image)
+        temp_image_path = temp_image.name
+
+    try:
+        api_instance = cloudmersive_convert_api_client.ConvertImageApi(api_client)
+
+        # Convert to PDF
+        result = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
+
+        # Return the PDF as a stream
+        return StreamingResponse(
+            result,
+            media_type="application/pdf",
+            headers={"Content-Disposition": "attachment; filename=converted.pdf"}
+        )
+
+    except ApiException as e:
+        return {"error": f"PDF conversion failed: {e}"}
+    finally:
+        os.remove(temp_image_path)
