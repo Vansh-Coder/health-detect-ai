@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,19 @@ const UnauthorizedStack = ({ setAuthenticated }) => {
       >
         {(props) => (
           <SignupScreen {...props} setAuthenticated={setAuthenticated} />
+        )}
+      </Stack.Screen>
+      <Stack.Screen
+        name="ForgotPassword"
+        options={() => ({
+          headerShown: false,
+        })}
+      >
+        {(props) => (
+          <ForgotPasswordScreen
+            {...props}
+            setAuthenticated={setAuthenticated}
+          />
         )}
       </Stack.Screen>
     </Stack.Navigator>

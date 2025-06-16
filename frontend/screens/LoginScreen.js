@@ -18,6 +18,10 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const handleForgotPassword = () => {
+    navigation.navigate("ForgotPassword");
+  };
+
   const handleLogin = () => {
     // Backend code to perform login
     setAuthenticated(true);
@@ -56,7 +60,14 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
                 autoCapitalize="none"
               />
             </View>
-            <Text style={styles.forgotPassword}>Forgot password ?</Text>
+            <View style={styles.forgotPasswordContainer}>
+              <TouchableOpacity
+                style={styles.forgotPasswordButton}
+                onPress={handleForgotPassword}
+              >
+                <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.lowerContainer}>
             <Text style={styles.disclaimerText}>
@@ -126,11 +137,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginBottom: 10,
   },
-  forgotPassword: {
+  forgotPasswordContainer: {
     width: width * 0.75,
-    fontSize: RFValue(12),
-    fontWeight: "500",
-    textAlign: "right",
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  forgotPasswordButton: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  forgotPasswordText: {
+    fontSize: RFValue(13),
+    fontWeight: "600",
   },
   lowerContainer: {
     flex: 3,
