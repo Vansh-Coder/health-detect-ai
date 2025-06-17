@@ -40,6 +40,7 @@ const ResetPasswordScreen = ({ setAuthenticated }) => {
     } else if (/\s/.test(password)) {
       showToast("No spaces allowed !");
     } else {
+      showToast("Password reset successfully !");
       setAuthenticated(true);
     }
   };
