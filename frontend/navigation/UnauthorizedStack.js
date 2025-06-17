@@ -1,10 +1,12 @@
+// MAKE FIXES
+
 import { createStackNavigator } from "@react-navigation/stack";
 import BlankHeaderOptions from "../components/BlankHeaderOptions";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
-import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-import EnterOTPScreen from "../screens/EnterOTPScreen";
+import VerifyEmailScreen from "../screens/VerifyEmailScreen";
+import EnterEmailScreen from "../screens/EnterEmailScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 
 const Stack = createStackNavigator();
@@ -31,34 +33,31 @@ const UnauthorizedStack = ({ setAuthenticated }) => {
       </Stack.Screen>
       <Stack.Screen
         name="Signup"
+        component={SignupScreen}
         options={() => ({
           headerShown: false,
         })}
+      />
+      <Stack.Screen
+        name="VerifyEmail"
+        options={({ navigation }) => BlankHeaderOptions({ navigation })}
       >
         {(props) => (
-          <SignupScreen {...props} setAuthenticated={setAuthenticated} />
+          <VerifyEmailScreen {...props} setAuthenticated={setAuthenticated} />
         )}
       </Stack.Screen>
       <Stack.Screen
-        name="ForgotPassword"
-        component={ForgotPasswordScreen}
-        options={({ navigation }) => BlankHeaderOptions({ navigation })}
-      />
-      <Stack.Screen
-        name="EnterOTP"
-        component={EnterOTPScreen}
+        name="EnterEmail"
+        component={EnterEmailScreen}
         options={({ navigation }) => BlankHeaderOptions({ navigation })}
       />
       <Stack.Screen
         name="ResetPassword"
+        component={ResetPasswordScreen}
         options={({ navigation }) =>
           BlankHeaderOptions({ navigation, useCustomBack: true })
         }
-      >
-        {(props) => (
-          <ResetPasswordScreen {...props} setAuthenticated={setAuthenticated} />
-        )}
-      </Stack.Screen>
+      />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,3 @@
-// MAKE FIXES
-
 import { useState, useEffect } from "react";
 import {
   View,
@@ -13,14 +11,16 @@ import { RFValue } from "react-native-responsive-fontsize";
 import Toast from "react-native-toast-message";
 import { auth, db } from "../firebaseConfig";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import { sendEmailVerification } from "firebase/auth";
 
 const { width } = Dimensions.get("window");
 
-const ResetPasswordScreen = ({ navigation, route }) => {
-  const { email } = route.params || "";
+const VerifyEmailScreen = ({ setAuthenticated, route }) => {
+  const { firstName, lastName, email } = route.params || "";
   const [timer, setTimer] = useState(60);
   const [timerRunning, setTimerRunning] = useState(true);
+
+  const user = auth.currentUser;
 
   useEffect(() => {
     let interval = null;
@@ -49,15 +49,33 @@ const ResetPasswordScreen = ({ navigation, route }) => {
     });
   };
 
-  const handleLogin = () => {
-    navigation.replace("Login");
+  const handleVerified = async () => {
+    try {
+      await user.reload();
+      if (user.emailVerified) {
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          createdAt: serverTimestamp(),
+        });
+        showToast("Email verified successfully !");
+        setAuthenticated(true);
+      } else {
+        showToast("Email not verified, try again !");
+      }
+    } catch (error) {
+      showToast("An error occurred, try again later !");
+      console.log(error);
+    }
   };
 
   const handleResend = async () => {
     try {
       if (!timerRunning) {
-        await sendPasswordResetEmail(auth, email);
-        showToast("Email with password reset link sent !");
+        await sendEmailVerification(user);
+        showToast("Email with verification link sent !");
         setTimer(60);
         setTimerRunning(true);
       }
@@ -71,27 +89,27 @@ const ResetPasswordScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Reset password</Text>
+          <Text style={styles.titleText}>Verify your email</Text>
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.descriptionText}>
-            Check your inbox for an email with password reset link !
+            Check your inbox for an email with verification link !
           </Text>
         </View>
         <View style={styles.lowerContainer}>
           <View style={styles.verifiedButtonContainer}>
             <TouchableOpacity
               style={styles.verifiedButton}
-              onPress={handleLogin}
+              onPress={handleVerified}
             >
-              <Text style={styles.verifiedButtonText}>Go to Login</Text>
+              <Text style={styles.verifiedButtonText}>I've Verified</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.timerContainer}>
             <Text style={styles.timerText}>
               {timerRunning
-                ? `Wait until ${timer} seconds to resend email with password reset link !`
-                : "Click the button below to resend email with password reset link !"}
+                ? `Wait until ${timer} seconds to resend email with verification link !`
+                : "Click the button below to resend email with verification link !"}
             </Text>
           </View>
           <View style={styles.resendButtonContainer}>
@@ -212,4 +230,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResetPasswordScreen;
+export default VerifyEmailScreen;

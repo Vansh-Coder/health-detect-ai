@@ -15,6 +15,7 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/.metro-health-check*
 frontend/.tsbuildinfo
+frontend/.env
 frontend/.env*.local
 frontend/*.pem
 

@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
+import Toast from "react-native-toast-message";
+import { auth, db } from "../firebaseConfig";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const { width } = Dimensions.get("window");
 
@@ -18,9 +21,34 @@ const FeedbackScreen = () => {
   const [feedback, setFeedback] = useState("");
   const isDisabled = feedback.trim().length === 0;
 
-  const handleSubmit = () => {
-    // Add toast here
-    console.log(feedback.trim());
+  const user = auth.currentUser;
+
+  const showToast = (text) => {
+    Toast.show({
+      type: "info",
+      text1: text,
+      position: "top",
+      topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
+    });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await addDoc(collection(db, "feedback"), {
+        uid: user.uid,
+        feedback: feedback.trim(),
+        createdAt: serverTimestamp(),
+      });
+      showToast("Feedback submitted successfully !");
+      setFeedback("");
+    } catch (error) {
+      showToast("An error occurred, try again later !");
+      console.log(error);
+    }
   };
 
   return (
@@ -39,7 +67,8 @@ const FeedbackScreen = () => {
               <TextInput
                 style={styles.field}
                 placeholder="Type your feedback here..."
-                onChangeText={(val) => setFeedback(val)}
+                value={feedback}
+                onChangeText={(val) => setFeedback(val.trimStart())}
                 multiline={true}
                 numberOfLines={9}
                 maxLength={600}

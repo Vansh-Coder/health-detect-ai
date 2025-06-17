@@ -1,3 +1,5 @@
+// MAKE FIXES
+
 import { useState } from "react";
 import {
   View,
@@ -15,14 +17,14 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const { width } = Dimensions.get("window");
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const EnterEmailScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSendOTP = async () => {
     setLoading(true);
     setLoading(false);
-    navigation.navigate("EnterOTP", { email: email });
+    navigation.navigate("ResetPassword", { email: email });
   };
 
   return (
@@ -134,4 +136,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPasswordScreen;
+export default EnterEmailScreen;

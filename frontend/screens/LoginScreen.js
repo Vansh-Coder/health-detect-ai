@@ -11,6 +11,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
+import Toast from "react-native-toast-message";
+import { auth } from "../firebaseConfig";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const { width } = Dimensions.get("window");
 
@@ -18,13 +21,42 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleForgotPassword = () => {
-    navigation.navigate("ForgotPassword");
+  const showToast = (text) => {
+    Toast.show({
+      type: "info",
+      text1: text,
+      position: "top",
+      topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
+    });
   };
 
-  const handleLogin = () => {
+  const handleForgotPassword = () => {
+    navigation.navigate("EnterEmail");
+  };
+
+  const handleLogin = async () => {
     // Backend code to perform login
-    setAuthenticated(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      showToast(`Welcome back, ${user.displayName} !`);
+      setAuthenticated(true);
+    } catch (error) {
+      if (error.code === "auth/invalid-credential") {
+        showToast("Invalid credentials, please try again !");
+      } else {
+        showToast("An error occurred, try again later !");
+        console.log(error);
+      }
+    }
   };
 
   const handleSignup = () => {

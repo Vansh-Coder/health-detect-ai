@@ -11,19 +11,75 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
+import Toast from "react-native-toast-message";
+import { auth } from "../firebaseConfig";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 
 const { width } = Dimensions.get("window");
 
-const SignupScreen = ({ navigation, setAuthenticated }) => {
+const SignupScreen = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignup = () => {
+  const showToast = (text) => {
+    Toast.show({
+      type: "info",
+      text1: text,
+      position: "top",
+      topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
+    });
+  };
+
+  const handleSignup = async () => {
     // Backend code to perform signup
-    setAuthenticated(true);
+    if (firstName.length === 0) {
+      showToast("Please enter valid first name !");
+    } else if (lastName.length === 0) {
+      showToast("Please enter valid last name !");
+    } else if (email.length === 0) {
+      showToast("Please enter valid email address !");
+    } else if (password !== confirmPassword) {
+      showToast("Passwords do not match !");
+    } else if (password.length < 8) {
+      showToast("Minimum 8 characters for password !");
+    } else if (/\s/.test(password)) {
+      showToast("Password shouldn't have any spaces !");
+    } else {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+        await updateProfile(user, {
+          displayName: firstName,
+        });
+        await sendEmailVerification(user);
+        showToast("Email verification link sent !");
+        navigation.navigate("VerifyEmail", { firstName, lastName, email });
+      } catch (error) {
+        if (error.code === "auth/invalid-email") {
+          showToast("Please enter valid email address !");
+        } else if (error.code === "auth/email-already-in-use") {
+          showToast("Email already in use, choose another !");
+        } else {
+          showToast("An error occurred, try again later !");
+          console.log(error);
+        }
+      }
+    }
   };
 
   const handleLogin = () => {
@@ -46,23 +102,26 @@ const SignupScreen = ({ navigation, setAuthenticated }) => {
               <TextInput
                 style={styles.field}
                 placeholder="First name"
-                onChangeText={(val) => setFirstName(val)}
-                autoCapitalize="none"
+                value={firstName}
+                maxLength={15}
+                onChangeText={(val) => setFirstName(val.trim())}
               />
             </View>
             <View style={styles.fieldContainer}>
               <TextInput
                 style={styles.field}
                 placeholder="Last name"
-                onChangeText={(val) => setLastName(val)}
-                autoCapitalize="none"
+                value={lastName}
+                maxLength={15}
+                onChangeText={(val) => setLastName(val.trim())}
               />
             </View>
             <View style={styles.fieldContainer}>
               <TextInput
                 style={styles.field}
                 placeholder="Email address"
-                onChangeText={(val) => setEmail(val)}
+                value={email}
+                onChangeText={(val) => setEmail(val.trim())}
                 autoCapitalize="none"
               />
             </View>
@@ -71,7 +130,8 @@ const SignupScreen = ({ navigation, setAuthenticated }) => {
                 style={styles.field}
                 placeholder="Password"
                 secureTextEntry
-                onChangeText={(val) => setPassword(val)}
+                value={password}
+                onChangeText={(val) => setPassword(val.trim())}
                 autoCapitalize="none"
               />
             </View>
@@ -80,7 +140,8 @@ const SignupScreen = ({ navigation, setAuthenticated }) => {
                 style={styles.field}
                 placeholder="Confirm password"
                 secureTextEntry
-                onChangeText={(val) => setConfirmPassword(val)}
+                value={confirmPassword}
+                onChangeText={(val) => setConfirmPassword(val.trim())}
                 autoCapitalize="none"
               />
             </View>
