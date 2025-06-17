@@ -5,6 +5,7 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import EnterOTPScreen from "../screens/EnterOTPScreen";
+import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 
 const Stack = createStackNavigator();
 
@@ -47,12 +48,19 @@ const UnauthorizedStack = ({ setAuthenticated }) => {
       />
       <Stack.Screen
         name="EnterOTP"
+        component={EnterOTPScreen}
         options={({ navigation }) => ({
           ...BlankHeaderOptions(navigation),
         })}
+      />
+      <Stack.Screen
+        name="ResetPassword"
+        options={() => ({
+          headerShown: false,
+        })}
       >
         {(props) => (
-          <EnterOTPScreen {...props} setAuthenticated={setAuthenticated} />
+          <ResetPasswordScreen {...props} setAuthenticated={setAuthenticated} />
         )}
       </Stack.Screen>
     </Stack.Navigator>
