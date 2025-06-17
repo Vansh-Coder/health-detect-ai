@@ -15,7 +15,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 
 const { width } = Dimensions.get("window");
 
-const ForgotPasswordScreen = ({ navigation, setAuthenticated }) => {
+const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +41,8 @@ const ForgotPasswordScreen = ({ navigation, setAuthenticated }) => {
               <TextInput
                 style={styles.field}
                 placeholder="Email address"
-                onChangeText={(val) => setEmail(val)}
+                value={email}
+                onChangeText={(val) => setEmail(val.trim())}
                 editable={!loading}
                 autoCapitalize="none"
               />
@@ -51,7 +52,7 @@ const ForgotPasswordScreen = ({ navigation, setAuthenticated }) => {
             <TouchableOpacity
               style={styles.sendOTPButton}
               onPress={handleSendOTP}
-              disabled={loading}
+              disabled={loading || email.length === 0}
             >
               <Text style={styles.sendOTPButtonText}>
                 {loading ? "Sending" : "Send OTP"}

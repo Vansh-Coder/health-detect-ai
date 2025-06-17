@@ -42,22 +42,18 @@ const UnauthorizedStack = ({ setAuthenticated }) => {
       <Stack.Screen
         name="ForgotPassword"
         component={ForgotPasswordScreen}
-        options={({ navigation }) => ({
-          ...BlankHeaderOptions(navigation),
-        })}
+        options={({ navigation }) => BlankHeaderOptions({ navigation })}
       />
       <Stack.Screen
         name="EnterOTP"
         component={EnterOTPScreen}
-        options={({ navigation }) => ({
-          ...BlankHeaderOptions(navigation),
-        })}
+        options={({ navigation }) => BlankHeaderOptions({ navigation })}
       />
       <Stack.Screen
         name="ResetPassword"
-        options={() => ({
-          headerShown: false,
-        })}
+        options={({ navigation }) =>
+          BlankHeaderOptions({ navigation, useCustomBack: true })
+        }
       >
         {(props) => (
           <ResetPasswordScreen {...props} setAuthenticated={setAuthenticated} />
