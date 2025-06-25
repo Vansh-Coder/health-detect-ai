@@ -35,6 +35,7 @@ frontend/.kotlin/
 # BACKEND (Python / FastAPI)
 # ====================
 backend/__pycache__/
+backend/app/__pycache__/
 backend/*.py[cod]
 backend/.Python
 backend/env/
