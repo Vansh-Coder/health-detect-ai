@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
+import * as FileSystem from "expo-file-system";
 import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
@@ -125,6 +126,7 @@ const HomeScreen = ({ navigation }) => {
   const uploadImage = async (image) => {
     try {
       const manipulatedImage = await resizeAndCompressImage(image);
+      await FileSystem.deleteAsync(image);
 
       const response = await fetch(manipulatedImage);
       const blob = await response.blob();

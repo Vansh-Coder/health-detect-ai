@@ -11,20 +11,20 @@ import { useSharedValue } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const onboardingData = [
   {
     title: "Welcome to HealthDetect AI",
-    image: require("../assets/pic.png"),
+    image: require("../assets/OnboardingImages/OnboardingFirst.png"),
   },
   {
-    title: "Track Your Health",
-    image: require("../assets/pic.png"),
+    title: "Take a Picture of your Skin",
+    image: require("../assets/OnboardingImages/OnboardingSecond.png"),
   },
   {
-    title: "Get AI Insights",
-    image: require("../assets/pic.png"),
+    title: "Get Insights by AI",
+    image: require("../assets/OnboardingImages/OnboardingThird.png"),
   },
 ];
 
@@ -51,8 +51,8 @@ const OnboardingScreen = ({ navigation }) => {
       <View style={styles.container}>
         <View style={{ flex: 3 }}>
           <Carousel
-            width={SCREEN_WIDTH}
-            height={SCREEN_HEIGHT * 0.6}
+            width={width}
+            height={height * 0.6}
             data={onboardingData}
             loop={false}
             onProgressChange={progress}
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderColor: "black",
     paddingVertical: 15,
-    width: SCREEN_WIDTH * 0.6,
+    width: width * 0.6,
     backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",

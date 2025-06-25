@@ -1,5 +1,3 @@
-// MAKE FIXES
-
 import { useState } from "react";
 import {
   View,
@@ -13,7 +11,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
+import { auth } from "../firebaseConfig";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const { width } = Dimensions.get("window");
 
@@ -21,8 +22,23 @@ const EnterEmailScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSendOTP = async () => {
+  const showToast = (text) => {
+    Toast.show({
+      type: "info",
+      text1: text,
+      position: "top",
+      topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
+    });
+  };
+
+  const handleSendEmail = async () => {
     setLoading(true);
+    await sendPasswordResetEmail(auth, email);
+    showToast("Email with password reset link sent !");
     setLoading(false);
     navigation.navigate("ResetPassword", { email: email });
   };
@@ -52,12 +68,25 @@ const EnterEmailScreen = ({ navigation }) => {
           </View>
           <View style={styles.lowerContainter}>
             <TouchableOpacity
-              style={styles.sendOTPButton}
-              onPress={handleSendOTP}
+              style={[
+                styles.sendEmailButton,
+                {
+                  borderColor: email.length === 0 ? "#D3D3D3" : "black",
+                  backgroundColor: email.length === 0 ? "#999999" : "black",
+                },
+              ]}
+              onPress={handleSendEmail}
               disabled={loading || email.length === 0}
             >
-              <Text style={styles.sendOTPButtonText}>
-                {loading ? "Sending" : "Send OTP"}
+              <Text
+                style={[
+                  styles.sendEmailButtonText,
+                  {
+                    color: email.length === 0 ? "#7D7D7D" : "white",
+                  },
+                ]}
+              >
+                {loading ? "Sending" : "Send Email"}
               </Text>
               {loading && (
                 <ActivityIndicator
@@ -118,20 +147,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  sendOTPButton: {
+  sendEmailButton: {
     flexDirection: "row",
     borderWidth: 1,
     borderRadius: 30,
-    borderColor: "black",
     paddingVertical: 15,
     width: width * 0.6,
-    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
   },
-  sendOTPButtonText: {
+  sendEmailButtonText: {
     fontSize: RFValue(16),
-    color: "white",
     fontWeight: "bold",
   },
 });

@@ -1,5 +1,3 @@
-// MAKE FIXES
-
 import { useState, useEffect } from "react";
 import {
   View,
@@ -11,9 +9,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
 import Toast from "react-native-toast-message";
-import { auth, db } from "../firebaseConfig";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const { width } = Dimensions.get("window");
 
@@ -79,12 +76,9 @@ const ResetPasswordScreen = ({ navigation, route }) => {
           </Text>
         </View>
         <View style={styles.lowerContainer}>
-          <View style={styles.verifiedButtonContainer}>
-            <TouchableOpacity
-              style={styles.verifiedButton}
-              onPress={handleLogin}
-            >
-              <Text style={styles.verifiedButtonText}>Go to Login</Text>
+          <View style={styles.loginButtonContainer}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.loginButtonText}>Go to Login</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.timerContainer}>
@@ -162,12 +156,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  verifiedButtonContainer: {
+  loginButtonContainer: {
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 40,
   },
-  verifiedButton: {
+  loginButton: {
     borderWidth: 1,
     borderRadius: 30,
     borderColor: "black",
@@ -177,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  verifiedButtonText: {
+  loginButtonText: {
     fontSize: RFValue(16),
     fontWeight: "bold",
     color: "white",

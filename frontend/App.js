@@ -14,13 +14,18 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      user ? setAuthenticated(true) : setAuthenticated(false);
+      if (user && user.emailVerified) {
+        setAuthenticated(true);
+      } else {
+        setAuthenticated(false);
+      }
     });
     return unsubscribe;
   }, []);
 
   if (authenticated === null) {
-    return LoadingScreen("Loading, please wait");
+    // return LoadingScreen("Loading, please wait");
+    return null;
   }
 
   return (

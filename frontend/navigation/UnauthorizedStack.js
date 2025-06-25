@@ -1,5 +1,3 @@
-// MAKE FIXES
-
 import { createStackNavigator } from "@react-navigation/stack";
 import BlankHeaderOptions from "../components/BlankHeaderOptions";
 import OnboardingScreen from "../screens/OnboardingScreen";
