@@ -9,12 +9,16 @@ import {
   Keyboard,
   Dimensions,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import LoadingScreen from "./LoadingScreen";
+import { auth, storage } from "../firebaseConfig";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const { width } = Dimensions.get("window");
 
@@ -22,6 +26,9 @@ const HomeScreen = ({ navigation }) => {
   const [image, setImage] = useState("");
   const [imageAdded, setImageAdded] = useState(false);
   const [question, setQuestion] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const user = auth.currentUser;
 
   const showSuccessToast = () => {
     Toast.show({
@@ -98,14 +105,45 @@ const HomeScreen = ({ navigation }) => {
     showFailToast();
   };
 
-  const handleSubmit = () => {
-    // save image, run results, and navigate
-    console.log("Submit button pressed!");
-    navigation.navigate("HomeStack", {
-      screen: "Result",
-      params: { question },
-    });
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      // save image
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const path = `images/${user.email}/${Date.now()}.jpg`;
+      const storageRef = ref(storage, path);
+      await uploadBytes(storageRef, blob);
+      const downloadURL = await getDownloadURL(storageRef);
+      // run results
+      const formData = new FormData();
+      formData.append("image_url", downloadURL);
+      if (question) {
+        formData.append("question", question);
+      }
+      const res = await fetch("http://192.168.1.22:8000/api/diagnosis/image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      });
+      const result = await res.json();
+      // navigate
+      navigation.navigate("HomeStack", {
+        screen: "Result",
+        params: { result, question },
+      });
+    } catch (error) {
+      console.log("Error occured:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return LoadingScreen("Analyzing results, please wait");
+  }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>

@@ -18,17 +18,9 @@ import ResultBar from "../components/ResultBar";
 const { width } = Dimensions.get("window");
 
 const ResultScreen = ({ navigation, route }) => {
-  const { question } = route.params || "";
+  const { result, question } = route.params || "";
   const viewRef = useRef(null);
   const [loading, setLoading] = useState(false);
-
-  const dataResults = [
-    { name: "Disease 1", score: "60.7" },
-    { name: "Disease 2", score: "25.4" },
-    { name: "Disease 3", score: "14.5" },
-  ];
-
-  const dataAnswer = [{ answer: "Okay" }];
 
   const showFailToast = () => {
     Toast.show({
@@ -118,9 +110,13 @@ const ResultScreen = ({ navigation, route }) => {
           <Text style={styles.titleText}>Diagnosis Results</Text>
         </View>
         <View style={styles.resultContainer}>
-          <ResultBar name={"Disease 1"} chances={"60.7"} />
-          <ResultBar name={"Disease 2"} chances={"25.4"} />
-          <ResultBar name={"Disease 3"} chances={"14.5"} />
+          {result.classification.labels.map((label, index) => (
+            <ResultBar
+              key={label}
+              name={label}
+              chances={result.classification.scores[index]}
+            />
+          ))}
           {question && question.length > 0 && (
             <View style={styles.QAContainer}>
               <View style={styles.innerContainer}>
@@ -136,7 +132,9 @@ const ResultScreen = ({ navigation, route }) => {
                   <Text style={styles.answerText}>A.</Text>
                 </View>
                 <View style={styles.sentenceContainer}>
-                  <Text style={styles.answerText}>Answer here</Text>
+                  <Text style={styles.answerText}>
+                    {result.vqa_answer.answer}
+                  </Text>
                 </View>
               </View>
             </View>

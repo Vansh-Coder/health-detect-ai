@@ -8,6 +8,8 @@ import {
   Dimensions,
 } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { auth } from "../firebaseConfig";
+import { signOut } from "firebase/auth";
 
 const { width, height } = Dimensions.get("window");
 
@@ -16,9 +18,15 @@ const LogoutModal = ({ setAuthenticated, modalVisible, setModalVisible }) => {
     setModalVisible(false);
   };
 
-  const handleLogoutConfirm = () => {
-    setModalVisible(false);
-    setAuthenticated(false);
+  const handleLogoutConfirm = async () => {
+    try {
+      await signOut(auth);
+      setModalVisible(false);
+      setAuthenticated(false);
+      console.log("Sign out successful!");
+    } catch (error) {
+      console.log("Error occured:", error);
+    }
   };
 
   return (

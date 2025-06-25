@@ -5,19 +5,22 @@ import PercentageBar from "./PercentageBar";
 const { width } = Dimensions.get("window");
 
 const ResultBar = ({ name, chances }) => {
+  const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
+  const formattedPercentage = chances.toFixed(2);
+
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
         <View style={styles.diseaseAndChances}>
           <View style={styles.diseaseContainer}>
-            <Text style={styles.diseaseText}>{name}</Text>
+            <Text style={styles.diseaseText}>{capitalizedName}</Text>
           </View>
           <View style={styles.chancesContainer}>
-            <Text style={styles.chancesText}>{chances}%</Text>
+            <Text style={styles.chancesText}>{formattedPercentage}%</Text>
           </View>
         </View>
         <View style={styles.percentageBarContainer}>
-          <PercentageBar percentage={40} />
+          <PercentageBar percentage={chances} />
         </View>
       </View>
       <View style={styles.rightContainer}>

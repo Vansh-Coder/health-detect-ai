@@ -1,5 +1,4 @@
 import os
-import uuid
 import shutil
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +6,9 @@ from fastapi.responses import StreamingResponse
 import cloudmersive_convert_api_client
 from cloudmersive_convert_api_client.rest import ApiException
 from typing import Optional
+import requests
+from io import BytesIO
+from PIL import Image
 import tempfile
 
 from .models import image_classifier, vqa
@@ -30,10 +32,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Folder for temporary uploads (swap to S3 later)
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 # Candidate labels for Zero-Shot Image Classification
 CANDIDATE_LABELS = [
     "eczema", "psoriasis", "acne", "rash", "infection", "allergic reaction",
@@ -42,23 +40,20 @@ CANDIDATE_LABELS = [
 
 @app.post("/api/diagnosis/image", response_model=ImageDiagnosisResult)
 async def diagnose_image(
-    file: UploadFile = File(...),
+    image_url: str = Form(...),
     question: Optional[str] = Form(None)
 ):
     """
-    1. Save uploaded image locally (or to S3 in Phase 4).
+    1. Process image URL.
     2. Run zero-shot image classification.
     3. If question provided → run VQA on the image.
     """
-    # 1. Save the file temporarily
-    file_id = f"{uuid.uuid4().hex}_{file.filename}"
-    file_path = os.path.join(UPLOAD_DIR, file_id)
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    response = requests.get(image_url)
+    image = Image.open(BytesIO(response.content)).convert("RGB")
 
     # 2. Zero-Shot Image Classification
     img_cls = image_classifier(
-        file_path,
+        image,
         candidate_labels=CANDIDATE_LABELS,
         multi_label=False  # True if multiple labels are wanted simultaneously
     )
@@ -70,14 +65,11 @@ async def diagnose_image(
     # 3. VQA (if a question was provided)
     vqa_answer = None
     if question:
-        vqa_out = vqa(image=file_path, question=question)
+        vqa_out = vqa(image=image, question=question)
         if isinstance(vqa_out, list) and len(vqa_out) > 0:
             vqa_answer = VQAResult(answer=vqa_out[0].get("answer", ""))
         else:
             vqa_answer = VQAResult(answer="No answer returned.")
-
-    # Clean up (optional – keep for history if a DB is implemented)
-    os.remove(file_path)
 
     return ImageDiagnosisResult(
         classification=classification,
