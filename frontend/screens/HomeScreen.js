@@ -9,16 +9,16 @@ import {
   Keyboard,
   Dimensions,
   Image,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
+import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import LoadingScreen from "./LoadingScreen";
 import { auth, storage } from "../firebaseConfig";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 
 const { width } = Dimensions.get("window");
 
@@ -105,31 +105,83 @@ const HomeScreen = ({ navigation }) => {
     showFailToast();
   };
 
-  const handleSubmit = async () => {
-    setLoading(true);
+  const resizeAndCompressImage = async (image) => {
     try {
-      // save image
-      const response = await fetch(image);
+      const manipulator = ImageManipulator.manipulate(image);
+      manipulator.resize({ width: 800 });
+
+      const rendered = await manipulator.renderAsync();
+      const saved = await rendered.saveAsync({
+        compress: 0.7,
+        format: SaveFormat.JPEG,
+      });
+
+      return saved.uri;
+    } catch (error) {
+      console.log("Error occurred:", error);
+    }
+  };
+
+  const uploadImage = async (image) => {
+    try {
+      const manipulatedImage = await resizeAndCompressImage(image);
+
+      const response = await fetch(manipulatedImage);
       const blob = await response.blob();
-      const path = `images/${user.email}/${Date.now()}.jpg`;
-      const storageRef = ref(storage, path);
+
+      const path = `${user.email}/${Date.now()}.jpg`;
+      const storageRef = ref(storage, `images/${path}`);
+
+      console.log("Image uploading started...");
       await uploadBytes(storageRef, blob);
-      const downloadURL = await getDownloadURL(storageRef);
-      // run results
+      console.log("Image uploaded");
+    } catch (error) {
+      console.log("Error occurred:", error);
+    }
+  };
+
+  const fetchResults = async (image) => {
+    try {
       const formData = new FormData();
-      formData.append("image_url", downloadURL);
+
+      formData.append("file", {
+        uri: image,
+        name: "photo.jpg",
+        type: "image/jpeg",
+      });
+
       if (question) {
         formData.append("question", question);
       }
-      const res = await fetch("http://192.168.1.22:8000/api/diagnosis/image", {
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        body: formData,
-      });
-      const result = await res.json();
-      // navigate
+
+      console.log("Sending fetch request...");
+      const response = await fetch(
+        "http://192.168.1.22:8000/api/diagnosis/image",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        }
+      );
+
+      console.log("Fetch request received, converting into JSON...");
+      const result = await response.json();
+      console.log("JSON conversion complete.");
+      return result;
+    } catch (error) {
+      console.log("Error occurred:", error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      console.log("Submit pressed");
+      await uploadImage(image);
+      const result = await fetchResults(image);
+
       navigation.navigate("HomeStack", {
         screen: "Result",
         params: { result, question },

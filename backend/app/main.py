@@ -40,23 +40,24 @@ CANDIDATE_LABELS = [
 
 @app.post("/api/diagnosis/image", response_model=ImageDiagnosisResult)
 async def diagnose_image(
-    image_url: str = Form(...),
+    file: UploadFile = File(...),
     question: Optional[str] = Form(None)
 ):
+    print("Starting image reading...")
     """
-    1. Process image URL.
+    1. Read image from upload.
     2. Run zero-shot image classification.
     3. If question provided → run VQA on the image.
     """
-    response = requests.get(image_url)
-    image = Image.open(BytesIO(response.content)).convert("RGB")
-
+    image = Image.open(BytesIO(await file.read())).convert("RGB")
+    print("Image reading completed, starting classification")
     # 2. Zero-Shot Image Classification
     img_cls = image_classifier(
         image,
         candidate_labels=CANDIDATE_LABELS,
-        multi_label=False  # True if multiple labels are wanted simultaneously
+        multi_label=False
     )
+    print("Classification ended")
     # Ensure top-3
     top_labels = [entry["label"] for entry in img_cls[:3]]
     top_scores = [entry["score"] for entry in img_cls[:3]]

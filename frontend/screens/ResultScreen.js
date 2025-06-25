@@ -42,11 +42,12 @@ const ResultScreen = ({ navigation, route }) => {
   const handleDownload = async () => {
     setLoading(true);
     try {
+      console.log("Download pressed, capturing image...");
       const imageUri = await captureRef(viewRef, {
         format: "jpg",
         quality: 1,
       });
-
+      console.log("Image captured");
       const fileName = imageUri.split("/").pop();
       const fileType = "image/jpeg";
 
@@ -56,9 +57,9 @@ const ResultScreen = ({ navigation, route }) => {
         name: fileName,
         type: fileType,
       });
-
+      console.log("Sending fetch request...");
       const response = await fetch(
-        "http://192.168.1.10:8000/api/convert/image-to-pdf",
+        "http://192.168.1.22:8000/api/convert/image-to-pdf",
         {
           method: "POST",
           headers: {
@@ -67,7 +68,7 @@ const ResultScreen = ({ navigation, route }) => {
           body: formData,
         }
       );
-
+      console.log("Fetch response received");
       if (!response.ok) {
         throw new Error("Server error while converting image to PDF");
       }
@@ -75,6 +76,7 @@ const ResultScreen = ({ navigation, route }) => {
       const blob = await response.blob();
 
       const reader = new FileReader();
+      console.log("Reader process started...");
       reader.onloadend = async () => {
         const base64data = reader.result.split(",")[1];
 

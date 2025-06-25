@@ -8,6 +8,23 @@ const ResultBar = ({ name, chances }) => {
   const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
   const formattedPercentage = chances.toFixed(2);
 
+  const imageSource = {
+    Eczema: require("../assets/candidateImages/Eczema.png"),
+    Psoriasis: require("../assets/candidateImages/Psoriasis.png"),
+    Acne: require("../assets/candidateImages/Acne.png"),
+    Rash: require("../assets/candidateImages/Rash.png"),
+    Infection: require("../assets/candidateImages/Infection.png"),
+    "Allergic reaction": require("../assets/candidateImages/AllergicReaction.png"),
+    Bruise: require("../assets/candidateImages/Bruise.png"),
+    Cut: require("../assets/candidateImages/Cut.png"),
+    Laceration: require("../assets/candidateImages/Laceration.png"),
+    Swelling: require("../assets/candidateImages/Swelling.png"),
+    Abrasion: require("../assets/candidateImages/Abrasion.png"),
+    Hematoma: require("../assets/candidateImages/Hematoma.png"),
+    Burn: require("../assets/candidateImages/Burn.png"),
+    Fallback: require("../assets/candidateImages/Fallback.png"),
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
@@ -25,7 +42,7 @@ const ResultBar = ({ name, chances }) => {
       </View>
       <View style={styles.rightContainer}>
         <Image
-          source={require(`../assets/candidateImages/${capitalizedName}.png`)}
+          source={imageSource[capitalizedName] || imageSource["Fallback"]}
           style={styles.image}
         />
       </View>
