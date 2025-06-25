@@ -20,12 +20,12 @@ const ResultBar = ({ name, chances }) => {
           </View>
         </View>
         <View style={styles.percentageBarContainer}>
-          <PercentageBar percentage={chances} />
+          <PercentageBar percentage={formattedPercentage} />
         </View>
       </View>
       <View style={styles.rightContainer}>
         <Image
-          source={require("../assets/candidateImages/eczema.png")}
+          source={require(`../assets/candidateImages/${capitalizedName}.png`)}
           style={styles.image}
         />
       </View>
