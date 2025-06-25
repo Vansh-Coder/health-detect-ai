@@ -15,6 +15,8 @@ import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import ResultBar from "../components/ResultBar";
 
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 const { width } = Dimensions.get("window");
 
 const ResultScreen = ({ navigation, route }) => {
@@ -22,7 +24,7 @@ const ResultScreen = ({ navigation, route }) => {
   const viewRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
-  const showFailToast = () => {
+  const showToast = () => {
     Toast.show({
       type: "error",
       text1: "Error downloading, try again later !",
@@ -42,12 +44,11 @@ const ResultScreen = ({ navigation, route }) => {
   const handleDownload = async () => {
     setLoading(true);
     try {
-      console.log("Download pressed, capturing image...");
       const imageUri = await captureRef(viewRef, {
         format: "jpg",
         quality: 1,
       });
-      console.log("Image captured");
+
       const fileName = imageUri.split("/").pop();
       const fileType = "image/jpeg";
 
@@ -57,18 +58,15 @@ const ResultScreen = ({ navigation, route }) => {
         name: fileName,
         type: fileType,
       });
-      console.log("Sending fetch request...");
-      const response = await fetch(
-        "http://192.168.1.22:8000/api/convert/image-to-pdf",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          body: formData,
-        }
-      );
-      console.log("Fetch response received");
+
+      const response = await fetch(`${BACKEND_URL}/api/convert/image-to-pdf`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      });
+
       if (!response.ok) {
         throw new Error("Server error while converting image to PDF");
       }
@@ -94,7 +92,7 @@ const ResultScreen = ({ navigation, route }) => {
 
       reader.readAsDataURL(blob);
     } catch (error) {
-      showFailToast();
+      showToast();
       console.log(error);
     } finally {
       setLoading(false);

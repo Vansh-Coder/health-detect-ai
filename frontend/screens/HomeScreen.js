@@ -21,6 +21,8 @@ import LoadingScreen from "./LoadingScreen";
 import { auth, storage } from "../firebaseConfig";
 import { ref, uploadBytes } from "firebase/storage";
 
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 const { width } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }) => {
@@ -31,23 +33,10 @@ const HomeScreen = ({ navigation }) => {
 
   const user = auth.currentUser;
 
-  const showSuccessToast = () => {
+  const showToast = () => {
     Toast.show({
       type: "success",
       text1: "Image uploaded successfully !",
-      position: "top",
-      topOffset: 60,
-      text1Style: {
-        fontSize: RFValue(13),
-        fontWeight: "600",
-      },
-    });
-  };
-
-  const showFailToast = () => {
-    Toast.show({
-      type: "info",
-      text1: "Image removed successfully !",
       position: "top",
       topOffset: 60,
       text1Style: {
@@ -79,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       setImageAdded(true);
-      showSuccessToast();
+      showToast();
     }
   };
 
@@ -96,14 +85,13 @@ const HomeScreen = ({ navigation }) => {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
       setImageAdded(true);
-      showSuccessToast();
+      showToast();
     }
   };
 
   const handleRemove = () => {
     setImage("");
     setImageAdded(false);
-    showFailToast();
   };
 
   const resizeAndCompressImage = async (image) => {
@@ -126,7 +114,6 @@ const HomeScreen = ({ navigation }) => {
   const uploadImage = async (image) => {
     try {
       const manipulatedImage = await resizeAndCompressImage(image);
-      await FileSystem.deleteAsync(image);
 
       const response = await fetch(manipulatedImage);
       const blob = await response.blob();
@@ -134,9 +121,8 @@ const HomeScreen = ({ navigation }) => {
       const path = `${user.email}/${Date.now()}.jpg`;
       const storageRef = ref(storage, `images/${path}`);
 
-      console.log("Image uploading started...");
       await uploadBytes(storageRef, blob);
-      console.log("Image uploaded");
+      await FileSystem.deleteAsync(manipulatedImage, { idempotent: true });
     } catch (error) {
       console.log("Error occurred:", error);
     }
@@ -156,21 +142,15 @@ const HomeScreen = ({ navigation }) => {
         formData.append("question", question);
       }
 
-      console.log("Sending fetch request...");
-      const response = await fetch(
-        "http://192.168.1.22:8000/api/diagnosis/image",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/diagnosis/image`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      });
 
-      console.log("Fetch request received, converting into JSON...");
       const result = await response.json();
-      console.log("JSON conversion complete.");
       return result;
     } catch (error) {
       console.log("Error occurred:", error);
@@ -180,7 +160,6 @@ const HomeScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      console.log("Submit pressed");
       await uploadImage(image);
       const result = await fetchResults(image);
 
@@ -196,7 +175,7 @@ const HomeScreen = ({ navigation }) => {
   };
 
   if (loading) {
-    return LoadingScreen("Analyzing results, please wait");
+    return LoadingScreen("Analyzing results, please wait...");
   }
 
   return (
