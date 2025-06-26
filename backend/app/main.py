@@ -6,7 +6,6 @@ from fastapi.responses import StreamingResponse
 import cloudmersive_convert_api_client
 from cloudmersive_convert_api_client.rest import ApiException
 from typing import Optional
-import requests
 from io import BytesIO
 from PIL import Image
 import tempfile
