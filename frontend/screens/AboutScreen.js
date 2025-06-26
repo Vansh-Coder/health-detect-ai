@@ -6,19 +6,40 @@ import {
   Linking,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
+import Constants from "expo-constants";
 import { RFValue } from "react-native-responsive-fontsize";
 import { Ionicons } from "@expo/vector-icons";
 
 const githubURL = "https://github.com/Vansh-Coder";
+const appVersion = Constants.expoConfig.version;
 
 const AboutScreen = () => {
+  const showToast = (text) => {
+    Toast.show({
+      type: "info",
+      text1: text,
+      position: "top",
+      topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
+    });
+  };
+
   const handleContactLink = async () => {
-    const supported = await Linking.canOpenURL(githubURL);
-    if (supported) {
-      await Linking.openURL(githubURL);
-    } else {
-      // Add toast here
-      console.log("Error! Cant open the github url.");
+    try {
+      const supported = await Linking.canOpenURL(githubURL);
+
+      if (supported) {
+        await Linking.openURL(githubURL);
+      } else {
+        showToast("Error opening Github, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening Github, try again later !");
+      console.log("Error occured:", error);
     }
   };
 
@@ -26,9 +47,10 @@ const AboutScreen = () => {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.container}>
         <View style={styles.descriptionContainer}>
+          <Text style={styles.descriptionTitle}>About</Text>
           <Text style={styles.descriptionText}>
             HealthDetect AI is designed to help with quick and accurate image
-            diagnosis !
+            diagnosis for skin diseases and common visible injuries !
           </Text>
         </View>
         <View style={styles.developerContainer}>
@@ -52,7 +74,7 @@ const AboutScreen = () => {
         </View>
         <View style={styles.versionContainer}>
           <Text style={styles.versionTitle}>App Version</Text>
-          <Text style={styles.versionNumber}>1.0.0</Text>
+          <Text style={styles.versionNumber}>{appVersion}</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -74,6 +96,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
     marginBottom: 25,
+  },
+  descriptionTitle: {
+    fontSize: RFValue(20),
+    fontWeight: "bold",
+    fontStyle: "italic",
+    marginBottom: 10,
   },
   descriptionText: {
     fontSize: RFValue(14),
