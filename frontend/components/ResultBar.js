@@ -6,7 +6,7 @@ const { width } = Dimensions.get("window");
 
 const ResultBar = ({ name, chances }) => {
   const capitalizedName = name.charAt(0).toUpperCase() + name.slice(1);
-  const formattedPercentage = chances.toFixed(2);
+  const formattedPercentage = (chances * 100).toFixed(2);
 
   const imageSource = {
     Eczema: require("../assets/candidateImages/Eczema.png"),
