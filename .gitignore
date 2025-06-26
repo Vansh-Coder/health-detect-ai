@@ -68,5 +68,7 @@ Thumbs.db
 *.sublime-project
 .vscode/
 .idea/
+.env
+*.env
 .AppleDouble
 .LSOverride
