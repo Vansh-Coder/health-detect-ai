@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import { auth } from "../firebaseConfig";
 import { signOut } from "firebase/auth";
@@ -14,6 +15,19 @@ import { signOut } from "firebase/auth";
 const { width, height } = Dimensions.get("window");
 
 const LogoutModal = ({ setAuthenticated, modalVisible, setModalVisible }) => {
+  const showToast = (text) => {
+    Toast.show({
+      type: "info",
+      text1: text,
+      position: "top",
+      topOffset: 60,
+      text1Style: {
+        fontSize: RFValue(13),
+        fontWeight: "600",
+      },
+    });
+  };
+
   const handleCancel = () => {
     setModalVisible(false);
   };
@@ -23,7 +37,7 @@ const LogoutModal = ({ setAuthenticated, modalVisible, setModalVisible }) => {
       await signOut(auth);
       setModalVisible(false);
       setAuthenticated(false);
-      console.log("Sign out successful!");
+      showToast("Logged out successfully !");
     } catch (error) {
       console.log("Error occured:", error);
     }

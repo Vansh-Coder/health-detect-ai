@@ -57,6 +57,7 @@ const OptionsDrawer = ({ setAuthenticated }) => {
         options={{
           // don't show drawer header for entire nested stack
           headerShown: false,
+          drawerLabel: "Home",
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="home" size={size + 2} color={color} />
           ),

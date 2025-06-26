@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -19,6 +20,7 @@ const { width } = Dimensions.get("window");
 
 const FeedbackScreen = () => {
   const [feedback, setFeedback] = useState("");
+  const [loading, setLoading] = useState(false);
   const isDisabled = feedback.trim().length === 0;
 
   const user = auth.currentUser;
@@ -37,6 +39,7 @@ const FeedbackScreen = () => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       await addDoc(collection(db, "feedback"), {
         uid: user.uid,
@@ -48,6 +51,8 @@ const FeedbackScreen = () => {
     } catch (error) {
       showToast("An error occurred, try again later !");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +90,7 @@ const FeedbackScreen = () => {
                 },
               ]}
               onPress={handleSubmit}
-              disabled={isDisabled}
+              disabled={isDisabled || loading}
             >
               <Text
                 style={[
@@ -95,8 +100,15 @@ const FeedbackScreen = () => {
                   },
                 ]}
               >
-                Submit
+                {loading ? "Submitting" : "Submit"}
               </Text>
+              {loading && (
+                <ActivityIndicator
+                  size="small"
+                  color="white"
+                  style={{ marginLeft: 10 }}
+                />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -154,6 +166,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   submitButton: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     width: width * 0.8,

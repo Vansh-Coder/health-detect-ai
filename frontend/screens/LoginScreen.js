@@ -39,7 +39,6 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
   };
 
   const handleLogin = async () => {
-    // Backend code to perform login
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
