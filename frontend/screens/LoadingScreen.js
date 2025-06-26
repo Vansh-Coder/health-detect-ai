@@ -10,7 +10,7 @@ const LoadingScreen = (text) => {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.container}>
         <LottieView
-          source={require("../assets/resultsLoader.json")}
+          source={require("../assets/loaderFiles/resultsLoader.json")}
           autoPlay
           loop
           style={styles.loader}
