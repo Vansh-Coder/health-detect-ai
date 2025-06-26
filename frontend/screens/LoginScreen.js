@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -20,6 +21,7 @@ const { width } = Dimensions.get("window");
 const LoginScreen = ({ navigation, setAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const showToast = (text) => {
     Toast.show({
@@ -39,6 +41,7 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -53,8 +56,10 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
         showToast("Invalid credentials, please try again !");
       } else {
         showToast("An error occurred, try again later !");
-        console.log(error);
+        console.log("Error occured:", error);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,6 +100,7 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
               <TouchableOpacity
                 style={styles.forgotPasswordButton}
                 onPress={handleForgotPassword}
+                disabled={loading}
               >
                 <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
               </TouchableOpacity>
@@ -105,12 +111,29 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
               By continuing, you agree to our Terms of Service and Privacy
               Policy.
             </Text>
-            <TouchableOpacity style={styles.signupButton} onPress={handleLogin}>
-              <Text style={styles.signupButtonText}>Login</Text>
+            <TouchableOpacity
+              style={styles.loginButton}
+              onPress={handleLogin}
+              disabled={loading}
+            >
+              <Text style={styles.loginButtonText}>
+                {loading ? "Logging in" : "Login"}
+              </Text>
+              {loading && (
+                <ActivityIndicator
+                  size="small"
+                  color="white"
+                  style={{ marginLeft: 10 }}
+                />
+              )}
             </TouchableOpacity>
             <View style={styles.footer}>
               <Text style={styles.footerText}>Don't have an account ? </Text>
-              <Text style={styles.footerLoginText} onPress={handleSignup}>
+              <Text
+                style={styles.footerLoginText}
+                onPress={handleSignup}
+                disabled={loading}
+              >
                 Signup
               </Text>
             </View>
@@ -184,7 +207,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
-  signupButton: {
+  loginButton: {
+    flexDirection: "row",
     borderWidth: 1,
     borderRadius: 30,
     borderColor: "black",
@@ -195,7 +219,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 15,
   },
-  signupButtonText: {
+  loginButtonText: {
     fontSize: RFValue(14),
     color: "white",
     fontWeight: "600",

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -27,6 +28,7 @@ const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const showToast = (text) => {
     Toast.show({
@@ -42,43 +44,47 @@ const SignupScreen = ({ navigation }) => {
   };
 
   const handleSignup = async () => {
-    // Backend code to perform signup
-    if (firstName.length === 0) {
-      showToast("Please enter valid first name !");
-    } else if (lastName.length === 0) {
-      showToast("Please enter valid last name !");
-    } else if (email.length === 0) {
-      showToast("Please enter valid email address !");
-    } else if (password !== confirmPassword) {
-      showToast("Passwords do not match !");
-    } else if (password.length < 8) {
-      showToast("Minimum 8 characters for password !");
-    } else if (/\s/.test(password)) {
-      showToast("Password shouldn't have any spaces !");
-    } else {
-      try {
+    setLoading(true);
+    try {
+      if (firstName.length === 0) {
+        showToast("Please enter valid first name !");
+      } else if (lastName.length === 0) {
+        showToast("Please enter valid last name !");
+      } else if (email.length === 0) {
+        showToast("Please enter valid email address !");
+      } else if (password !== confirmPassword) {
+        showToast("Passwords do not match !");
+      } else if (password.length < 8) {
+        showToast("Minimum 8 characters for password !");
+      } else if (/\s/.test(password)) {
+        showToast("Password shouldn't have any spaces !");
+      } else {
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
+
         const user = userCredential.user;
         await updateProfile(user, {
           displayName: firstName,
         });
+
         await sendEmailVerification(user);
         showToast("Email verification link sent !");
         navigation.navigate("VerifyEmail", { firstName, lastName, email });
-      } catch (error) {
-        if (error.code === "auth/invalid-email") {
-          showToast("Please enter valid email address !");
-        } else if (error.code === "auth/email-already-in-use") {
-          showToast("Email already in use, choose another !");
-        } else {
-          showToast("An error occurred, try again later !");
-          console.log(error);
-        }
       }
+    } catch (error) {
+      if (error.code === "auth/invalid-email") {
+        showToast("Please enter valid email address !");
+      } else if (error.code === "auth/email-already-in-use") {
+        showToast("Email already in use, choose another !");
+      } else {
+        showToast("An error occurred, try again later !");
+        console.log(error);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -154,12 +160,26 @@ const SignupScreen = ({ navigation }) => {
             <TouchableOpacity
               style={styles.signupButton}
               onPress={handleSignup}
+              disabled={loading}
             >
-              <Text style={styles.signupButtonText}>Sign Up</Text>
+              <Text style={styles.signupButtonText}>
+                {loading ? "Signing Up" : "Sign Up"}
+              </Text>
+              {loading && (
+                <ActivityIndicator
+                  size="small"
+                  color="white"
+                  style={{ marginLeft: 10 }}
+                />
+              )}
             </TouchableOpacity>
             <View style={styles.footer}>
               <Text style={styles.footerText}>Already have an account ? </Text>
-              <Text style={styles.footerLoginText} onPress={handleLogin}>
+              <Text
+                style={styles.footerLoginText}
+                onPress={handleLogin}
+                disabled={loading}
+              >
                 Login
               </Text>
             </View>
@@ -221,6 +241,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   signupButton: {
+    flexDirection: "row",
     borderWidth: 1,
     borderRadius: 30,
     borderColor: "black",
