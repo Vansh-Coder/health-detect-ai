@@ -43,3 +43,11 @@ jobs:
             --port 8080 \
             --memory=1024Mi \
             --set-env-vars CLOUDMERSIVE_API_KEY=${{ secrets.CLOUDMERSIVE_API_KEY }}
+      
+      - name: Prune old container images (keep latest 2)
+        run: |
+          gcloud container images list-tags gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }} \
+            --sort-by=~TIMESTAMP --limit=100 \
+            --format="get(digest)" \
+            | tail -n +3 \
+            | xargs -I {} gcloud container images delete gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}@{} --quiet --force-delete-tags
