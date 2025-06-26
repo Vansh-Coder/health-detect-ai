@@ -10,7 +10,7 @@ from io import BytesIO
 from PIL import Image
 import tempfile
 
-from .models import image_classifier, vqa
+from .models import get_image_classifier, get_vqa
 from .schemas import ClassificationResult, VQAResult, ImageDiagnosisResult
 
 # Cloudmersive API Key
@@ -49,11 +49,7 @@ async def diagnose_image(
     """
     image = Image.open(BytesIO(await file.read())).convert("RGB")
     # 2. Zero-Shot Image Classification
-    img_cls = image_classifier(
-        image,
-        candidate_labels=CANDIDATE_LABELS,
-        multi_label=False
-    )
+    img_cls = get_image_classifier()(image, candidate_labels=CANDIDATE_LABELS, multi_label=False)
     # Ensure top-3
     top_labels = [entry["label"] for entry in img_cls[:3]]
     top_scores = [entry["score"] for entry in img_cls[:3]]
@@ -62,7 +58,7 @@ async def diagnose_image(
     # 3. VQA (if a question was provided)
     vqa_answer = None
     if question:
-        vqa_out = vqa(image=image, question=question)
+        vqa_out = get_vqa()(image=image, question=question)
         if isinstance(vqa_out, list) and len(vqa_out) > 0:
             vqa_answer = VQAResult(answer=vqa_out[0].get("answer", ""))
         else:
