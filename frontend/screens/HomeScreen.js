@@ -33,10 +33,10 @@ const HomeScreen = ({ navigation }) => {
 
   const user = auth.currentUser;
 
-  const showToast = () => {
+  const showToast = (text) => {
     Toast.show({
-      type: "success",
-      text1: "Image uploaded successfully !",
+      type: "info",
+      text1: text,
       position: "top",
       topOffset: 60,
       text1Style: {
@@ -46,13 +46,25 @@ const HomeScreen = ({ navigation }) => {
     });
   };
 
+  const isImageTooLarge = async (image) => {
+    try {
+      const limitMB = 5;
+      const info = await FileSystem.getInfoAsync(image);
+      const sizeInMB = info.size / (1024 * 1024);
+
+      return sizeInMB > limitMB;
+    } catch (error) {
+      console.log("Error occured:", error);
+      return true;
+    }
+  };
+
   const handleCamera = async () => {
     // Asking for permission
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {
-      // Add toast here
-      alert("Camera access is required!");
+      showToast("Camera access is required !");
       return;
     }
 
@@ -66,13 +78,29 @@ const HomeScreen = ({ navigation }) => {
 
     // Saving the image
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const uri = result.assets[0].uri;
+      const tooLarge = await isImageTooLarge(uri);
+
+      if (tooLarge) {
+        showToast("Please share an image under 5MB !");
+        return;
+      }
+
+      setImage(uri);
       setImageAdded(true);
-      showToast();
+      showToast("Image uploaded successfully !");
     }
   };
 
   const handleGallery = async () => {
+    // Asking for permission
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+      showToast("Gallery access is required !");
+      return;
+    }
+
     // Launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
@@ -83,9 +111,17 @@ const HomeScreen = ({ navigation }) => {
 
     // Saving the image
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const uri = result.assets[0].uri;
+      const tooLarge = await isImageTooLarge(uri);
+
+      if (tooLarge) {
+        showToast("Please share an image under 5MB !");
+        return;
+      }
+
+      setImage(uri);
       setImageAdded(true);
-      showToast();
+      showToast("Image uploaded successfully !");
     }
   };
 
@@ -128,14 +164,27 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const getMimeandName = (image) => {
+    const extension = image.split(".").pop().toLowerCase();
+    const photoName = `photo.${extension}`;
+
+    let photoType = "image/jpeg";
+    if (extension === "png") {
+      photoType = "image/png";
+    }
+
+    return { photoType, photoName };
+  };
+
   const fetchResults = async (image) => {
     try {
+      const { photoType, photoName } = getMimeandName(image);
       const formData = new FormData();
 
       formData.append("file", {
         uri: image,
-        name: "photo.jpg",
-        type: "image/jpeg",
+        name: photoName,
+        type: photoType,
       });
 
       if (question) {
