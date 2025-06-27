@@ -44,10 +44,18 @@ jobs:
             --memory=2048Mi \
             --set-env-vars CLOUDMERSIVE_API_KEY=${{ secrets.CLOUDMERSIVE_API_KEY }}
 
-      - name: Prune old container images (keep latest 2)
+      - name: Prune all but the currently deployed image
         run: |
+          CURRENT_DIGEST=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --format='value(status.traffic[0].revisionName)' | \
+            xargs -I {} gcloud run revisions describe {} \
+              --region=${{ env.REGION }} \
+              --format='value(status.imageDigest)')
+
           gcloud container images list-tags gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }} \
             --sort-by=~TIMESTAMP --limit=100 \
             --format="get(digest)" \
-            | tail -n +3 \
+            | grep -v "$CURRENT_DIGEST" \
             | xargs -I {} gcloud container images delete gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}@{} --quiet --force-delete-tags
