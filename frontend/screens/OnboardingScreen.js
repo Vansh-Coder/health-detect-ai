@@ -23,7 +23,7 @@ const onboardingData = [
     image: require("../assets/OnboardingImages/OnboardingSecond.png"),
   },
   {
-    title: "Get Insights by AI",
+    title: "Get Real Insights by AI",
     image: require("../assets/OnboardingImages/OnboardingThird.png"),
   },
 ];
