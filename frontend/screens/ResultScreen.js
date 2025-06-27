@@ -20,7 +20,7 @@ const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const { width } = Dimensions.get("window");
 
 const ResultScreen = ({ navigation, route }) => {
-  const { result, question } = route.params || "";
+  const { result } = route.params || "";
   const viewRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +74,7 @@ const ResultScreen = ({ navigation, route }) => {
       const blob = await response.blob();
 
       const reader = new FileReader();
-      console.log("Reader process started...");
+
       reader.onloadend = async () => {
         const base64data = reader.result.split(",")[1];
 
@@ -117,28 +117,6 @@ const ResultScreen = ({ navigation, route }) => {
               chances={result.classification.scores[index]}
             />
           ))}
-          {question && question.length > 0 && (
-            <View style={styles.QAContainer}>
-              <View style={styles.innerContainer}>
-                <View style={styles.markerContainer}>
-                  <Text style={styles.questionText}>Q.</Text>
-                </View>
-                <View style={styles.sentenceContainer}>
-                  <Text style={styles.questionText}>{question}</Text>
-                </View>
-              </View>
-              <View style={styles.innerContainer}>
-                <View style={styles.markerContainer}>
-                  <Text style={styles.answerText}>A.</Text>
-                </View>
-                <View style={styles.sentenceContainer}>
-                  <Text style={styles.answerText}>
-                    {result.vqa_answer.answer}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          )}
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
@@ -207,35 +185,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: width * 0.8,
-  },
-  QAContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    marginTop: 30,
-  },
-  innerContainer: {
-    flexDirection: "row",
-    marginBottom: 5,
-  },
-  markerContainer: {
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  sentenceContainer: {
-    justifyContent: "center",
-    alignItems: "flex-start",
-    paddingLeft: 10,
-  },
-  questionText: {
-    fontSize: RFValue(15),
-    fontWeight: "600",
-    color: "#787878",
-  },
-  answerText: {
-    fontSize: RFValue(15),
-    fontWeight: "600",
-    color: "black",
   },
   buttonsContainer: {
     flex: 2,

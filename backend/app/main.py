@@ -1,16 +1,15 @@
 import os
 import shutil
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import StreamingResponse
 import cloudmersive_convert_api_client
 from cloudmersive_convert_api_client.rest import ApiException
-from typing import Optional
 from io import BytesIO
 from PIL import Image
 import tempfile
 
-from .models import get_image_classifier, get_vqa
-from .schemas import ClassificationResult, VQAResult, ImageDiagnosisResult
+from .models import get_image_classifier
+from .schemas import ClassificationResult, ImageDiagnosisResult
 
 # Cloudmersive API Key
 CLOUDMERSIVE_API_KEY = os.getenv("CLOUDMERSIVE_API_KEY")
@@ -31,12 +30,10 @@ CANDIDATE_LABELS = [
 @app.post("/api/diagnosis/image", response_model=ImageDiagnosisResult)
 async def diagnose_image(
     file: UploadFile = File(...),
-    question: Optional[str] = Form(None)
 ):
     """
     1. Read image from upload.
     2. Run zero-shot image classification.
-    3. If question provided → run VQA on the image.
     """
     image = Image.open(BytesIO(await file.read())).convert("RGB")
     # 2. Zero-Shot Image Classification
@@ -46,18 +43,8 @@ async def diagnose_image(
     top_scores = [entry["score"] for entry in img_cls[:3]]
     classification = ClassificationResult(labels=top_labels, scores=top_scores)
 
-    # 3. VQA (if a question was provided)
-    vqa_answer = None
-    if question:
-        vqa_out = get_vqa()(image=image, question=question)
-        if isinstance(vqa_out, list) and len(vqa_out) > 0:
-            vqa_answer = VQAResult(answer=vqa_out[0].get("answer", ""))
-        else:
-            vqa_answer = VQAResult(answer="No answer returned.")
-
     return ImageDiagnosisResult(
         classification=classification,
-        vqa_answer=vqa_answer
     )
 
 @app.post("/api/convert/image-to-pdf")

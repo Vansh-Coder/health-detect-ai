@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
@@ -28,7 +27,6 @@ const { width } = Dimensions.get("window");
 const HomeScreen = ({ navigation }) => {
   const [image, setImage] = useState("");
   const [imageAdded, setImageAdded] = useState(false);
-  const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
 
   const user = auth.currentUser;
@@ -187,10 +185,6 @@ const HomeScreen = ({ navigation }) => {
         type: photoType,
       });
 
-      if (question) {
-        formData.append("question", question);
-      }
-
       const response = await fetch(`${BACKEND_URL}/api/diagnosis/image`, {
         method: "POST",
         headers: {
@@ -214,7 +208,7 @@ const HomeScreen = ({ navigation }) => {
 
       navigation.navigate("HomeStack", {
         screen: "Result",
-        params: { result, question },
+        params: { result },
       });
     } catch (error) {
       console.log("Error occured:", error);
@@ -279,17 +273,6 @@ const HomeScreen = ({ navigation }) => {
             </View>
           )}
           <View style={styles.lowerContainer}>
-            <Text style={styles.fieldLabel}>
-              Ask related question (optional)
-            </Text>
-            <View style={styles.fieldContainer}>
-              <TextInput
-                placeholder='Ex. "Is this eczema ?"'
-                style={styles.field}
-                onChangeText={(val) => setQuestion(val.trim())}
-                maxLength={60}
-              />
-            </View>
             <TouchableOpacity
               style={[
                 styles.submitButton,
@@ -401,29 +384,9 @@ const styles = StyleSheet.create({
   },
   lowerContainer: {
     flex: 2,
+    justifyContent: "flex-start",
     alignItems: "center",
-  },
-  fieldLabel: {
-    width: width * 0.8,
-    fontSize: RFValue(15),
-    fontWeight: "500",
-    marginBottom: 5,
-    paddingLeft: 5,
-  },
-  fieldContainer: {
-    width: width * 0.8,
-    borderWidth: 2,
-    justifyContent: "center",
-    borderRadius: 10,
-    borderColor: "#ccc",
-    backgroundColor: "white",
-    marginBottom: 20,
-  },
-  field: {
-    width: width * 0.8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    fontSize: RFValue(16),
+    paddingTop: 40,
   },
   submitButton: {
     width: width * 0.8,
