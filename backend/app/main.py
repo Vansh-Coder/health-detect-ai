@@ -1,7 +1,6 @@
 import os
 import shutil
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 import cloudmersive_convert_api_client
 from cloudmersive_convert_api_client.rest import ApiException
@@ -22,14 +21,6 @@ configuration.api_key['Apikey'] = CLOUDMERSIVE_API_KEY
 api_client = cloudmersive_convert_api_client.ApiClient(configuration)
 
 app = FastAPI(title="HealthDetect AI")
-
-# Allow CORS from any origin for convenience (adjust before production)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Candidate labels for Zero-Shot Image Classification
 CANDIDATE_LABELS = [
