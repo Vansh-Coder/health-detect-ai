@@ -1,9 +1,6 @@
 import torch
 from transformers import pipeline
 
-# Detect whether GPU is available
-DEVICE = 0 if torch.cuda.is_available() else -1
-
 _image_classifier = None
 _vqa = None
 
@@ -14,7 +11,7 @@ def get_image_classifier():
         _image_classifier = pipeline(
             "zero-shot-image-classification",
             model="openai/clip-vit-base-patch32",
-            device=DEVICE
+            device=-1
         )
     return _image_classifier
 
@@ -25,6 +22,6 @@ def get_vqa():
         _vqa = pipeline(
             "visual-question-answering",
             model="dandelin/vilt-b32-finetuned-vqa",
-            device=DEVICE
+            device=-1
         )
     return _vqa

@@ -198,7 +198,7 @@ const HomeScreen = ({ navigation }) => {
         },
         body: formData,
       });
-
+      console.log(response);
       const result = await response.json();
       return result;
     } catch (error) {
