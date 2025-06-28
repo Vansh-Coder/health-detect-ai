@@ -1,31 +1,32 @@
+# backend/.dockerignore
+
 # Byte-compiled / cache
-**/__pycache__/
+__pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 
-# Virtual envs
+# Virtualenvs
 env/
 venv/
 
 # Git
 .git/
 
-# Local Firebase service-account creds or dotenv files
-*.json
+# Local secrets / dotenv
 .env
 .env.*
 
 # Logs
 *.log
 
-# Hugging Face / pip caches
+# Monorepo frontend
+frontend/
+
+# Host-side Hugging Face cache (if ever pre-downloaded locally)
+model_cache/
 **/.cache/
-**/.huggingface/
 
 # IDE settings
 .vscode/
 .idea/
-
-# Monorepo frontend
-frontend/

@@ -9,23 +9,34 @@ WORKDIR /app
 
 # install system deps for Pillow and Cloudmersive
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+ && apt-get install -y --no-install-recommends \
        build-essential \
        libjpeg-dev \
        libpng-dev \
        wget \
-    && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
-# copy and install Python deps
+# copy & install Python deps (including transformers, torch, etc.)
 COPY requirements.txt .
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+ && pip install --no-cache-dir -r requirements.txt \
+ # ensure we have the HF download helper
+ && pip install --no-cache-dir huggingface_hub
 
-# copy FastAPI app
+# ──────────── PRE-DOWNLOAD CLIP MODEL ────────────
+# pull the full "openai/clip-vit-base-patch32" into
+# the default HF cache directory (/root/.cache/huggingface)
+RUN python3 - <<'EOF'
+from huggingface_hub import snapshot_download
+snapshot_download("openai/clip-vit-base-patch32")
+EOF
+# ───────────────────────────────────────────────────
+
+# copy your FastAPI app
 COPY app ./app
 
-# expose port expected by fly
+# expose the port Fly expects
 EXPOSE 8000
 
-# default command
+# when the container boots, spin up Uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
