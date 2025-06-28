@@ -192,7 +192,13 @@ const HomeScreen = ({ navigation }) => {
         },
         body: formData,
       });
-      console.log(response);
+
+      if (!response.ok) {
+        console.log("Response:\n", response);
+        console.log("Error occured:", response);
+        return;
+      }
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -206,10 +212,14 @@ const HomeScreen = ({ navigation }) => {
       await uploadImage(image);
       const result = await fetchResults(image);
 
-      navigation.navigate("HomeStack", {
-        screen: "Result",
-        params: { result },
-      });
+      if (result) {
+        navigation.navigate("HomeStack", {
+          screen: "Result",
+          params: { result },
+        });
+      } else {
+        showToast("Error, please try again !");
+      }
     } catch (error) {
       console.log("Error occured:", error);
     } finally {
@@ -290,7 +300,7 @@ const HomeScreen = ({ navigation }) => {
                   { color: imageAdded ? "white" : "#7D7D7D" },
                 ]}
               >
-                Submit
+                Run Diagnosis
               </Text>
             </TouchableOpacity>
           </View>
@@ -312,12 +322,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   titleContainer: {
-    flex: 1,
+    flex: 1.5,
     justifyContent: "center",
     alignItems: "center",
   },
   titleText: {
-    fontSize: RFValue(21),
+    fontSize: RFValue(22),
     fontWeight: "bold",
     textAlign: "center",
   },
