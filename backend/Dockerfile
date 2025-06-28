@@ -1,42 +1,52 @@
-# backend/Dockerfile
-FROM python:3.11-slim
+# Dockerfile (multi-stage build)
 
-# avoid Python buffering
+# Builder stage: install deps, download CLIP into /app/model_cache
+FROM python:3.11-slim AS builder
 ENV PYTHONUNBUFFERED=1
-
-# where code lives in container
 WORKDIR /app
 
-# install system deps for Pillow and Cloudmersive
+# Install system deps for model build
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-       build-essential \
-       libjpeg-dev \
-       libpng-dev \
-       wget \
+ && apt-get install -y --no-install-recommends build-essential wget \
  && rm -rf /var/lib/apt/lists/*
 
-# copy & install Python deps (including transformers, torch, etc.)
+# Copy and install Python deps (including huggingface_hub)
 COPY requirements.txt .
 RUN pip install --upgrade pip \
- && pip install --no-cache-dir -r requirements.txt \
- # ensure we have the HF download helper
- && pip install --no-cache-dir huggingface_hub
+ && pip install --no-cache-dir -r requirements.txt huggingface_hub
 
-# ──────────── PRE-DOWNLOAD CLIP MODEL ────────────
-# pull the full "openai/clip-vit-base-patch32" into
-# the default HF cache directory (/root/.cache/huggingface)
+# Pre-download the CLIP model into local cache
 RUN python3 - <<'EOF'
 from huggingface_hub import snapshot_download
-snapshot_download("openai/clip-vit-base-patch32")
+snapshot_download(
+    repo_id="openai/clip-vit-base-patch32",
+    cache_dir="/app/model_cache"
+)
 EOF
-# ───────────────────────────────────────────────────
 
-# copy your FastAPI app
+# Final stage: slim runtime image with pre-cached model
+FROM python:3.11-slim AS runtime
+ENV PYTHONUNBUFFERED=1
+# Point transformers to use cached model
+ENV HF_HOME=/app/model_cache
+WORKDIR /app
+
+# Install only runtime system libraries
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libjpeg-dev libpng-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Copy pre-cached model
+COPY --from=builder /app/model_cache /app/model_cache
+
+# Copy Python deps and install (without huggingface_hub)
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
 COPY app ./app
 
-# expose the port Fly expects
+# Expose port and start server
 EXPOSE 8000
-
-# when the container boots, spin up Uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

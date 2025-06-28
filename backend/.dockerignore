@@ -1,5 +1,3 @@
-# backend/.dockerignore
-
 # Byte-compiled / cache
 __pycache__/
 *.py[cod]
@@ -10,7 +8,7 @@ __pycache__/
 env/
 venv/
 
-# Git
+# Git metadata
 .git/
 
 # Local secrets / dotenv
@@ -20,10 +18,10 @@ venv/
 # Logs
 *.log
 
-# Monorepo frontend
+# Monorepo frontend (not needed for backend build)
 frontend/
 
-# Host-side Hugging Face cache (if ever pre-downloaded locally)
+# Hugging Face cache on host
 model_cache/
 **/.cache/
 
