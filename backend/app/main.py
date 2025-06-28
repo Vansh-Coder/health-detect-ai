@@ -1,15 +1,50 @@
 import os
 import shutil
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import StreamingResponse
+
+import firebase_admin
+from firebase_admin import auth, credentials
+
 import cloudmersive_convert_api_client
 from cloudmersive_convert_api_client.rest import ApiException
+
 from io import BytesIO
 from PIL import Image
 import tempfile
 
 from .models import get_image_classifier
 from .schemas import ClassificationResult, ImageDiagnosisResult
+
+# initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    cred = credentials.Certificate(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+    firebase_admin.initialize_app(cred)
+
+# for parsing the Authorization: Bearer <token> header
+bearer_scheme = HTTPBearer()
+
+async def verify_firebase_token(
+    creds: HTTPAuthorizationCredentials = Depends(bearer_scheme)
+):
+    """
+    FastAPI dependency which:
+      1) extracts the Bearer token
+      2) calls Firebase Admin to verify it
+      3) returns the decoded token
+    """
+    id_token = creds.credentials
+    try:
+        decoded = auth.verify_id_token(id_token)
+        return decoded
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired Firebase ID token"
+        )
+
+app = FastAPI(title="HealthDetect AI")
 
 # Cloudmersive API Key
 CLOUDMERSIVE_API_KEY = os.getenv("CLOUDMERSIVE_API_KEY")
@@ -18,8 +53,6 @@ CLOUDMERSIVE_API_KEY = os.getenv("CLOUDMERSIVE_API_KEY")
 configuration = cloudmersive_convert_api_client.Configuration()
 configuration.api_key['Apikey'] = CLOUDMERSIVE_API_KEY
 api_client = cloudmersive_convert_api_client.ApiClient(configuration)
-
-app = FastAPI(title="HealthDetect AI")
 
 # Candidate labels for Zero-Shot Image Classification
 CANDIDATE_LABELS = [
@@ -30,6 +63,7 @@ CANDIDATE_LABELS = [
 @app.post("/api/diagnosis/image", response_model=ImageDiagnosisResult)
 async def diagnose_image(
     file: UploadFile = File(...),
+    user=Depends(verify_firebase_token)
 ):
     """
     1. Read image from upload.
@@ -48,7 +82,10 @@ async def diagnose_image(
     )
 
 @app.post("/api/convert/image-to-pdf")
-async def convert_image_to_pdf(file: UploadFile = File(...)):
+async def convert_image_to_pdf(
+    file: UploadFile = File(...),
+    user=Depends(verify_firebase_token)
+):
     """
     Convert an uploaded image to a PDF using Cloudmersive API.
     """
