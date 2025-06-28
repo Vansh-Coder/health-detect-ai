@@ -177,7 +177,7 @@ const HomeScreen = ({ navigation }) => {
   const fetchResults = async (image) => {
     try {
       const { photoType, photoName } = getMimeandName(image);
-      const token = await firebase.auth().currentUser.getIdToken();
+      const token = await user.getIdToken();
       const formData = new FormData();
 
       formData.append("file", {
@@ -190,14 +190,13 @@ const HomeScreen = ({ navigation }) => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
 
       if (!response.ok) {
-        console.log("Response:\n", response);
-        console.log("Error occured:", response);
+        console.log("Response not OK:", response);
         return;
       }
 
