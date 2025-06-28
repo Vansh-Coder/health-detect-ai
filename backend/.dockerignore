@@ -1,0 +1,31 @@
+# Byte-compiled / cache
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual envs
+env/
+venv/
+
+# Git
+.git/
+
+# Local Firebase service-account creds or dotenv files
+*.json
+.env
+.env.*
+
+# Logs
+*.log
+
+# Hugging Face / pip caches
+**/.cache/
+**/.huggingface/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Monorepo frontend
+frontend/
