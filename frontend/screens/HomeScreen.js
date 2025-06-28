@@ -177,6 +177,7 @@ const HomeScreen = ({ navigation }) => {
   const fetchResults = async (image) => {
     try {
       const { photoType, photoName } = getMimeandName(image);
+      const token = await firebase.auth().currentUser.getIdToken();
       const formData = new FormData();
 
       formData.append("file", {
@@ -188,6 +189,7 @@ const HomeScreen = ({ navigation }) => {
       const response = await fetch(`${BACKEND_URL}/api/diagnosis/image`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
         body: formData,

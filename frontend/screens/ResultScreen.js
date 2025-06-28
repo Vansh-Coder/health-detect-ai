@@ -14,6 +14,7 @@ import * as Sharing from "expo-sharing";
 import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
 import ResultBar from "../components/ResultBar";
+import { auth } from "../firebaseConfig";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -23,6 +24,8 @@ const ResultScreen = ({ navigation, route }) => {
   const { result } = route.params || "";
   const viewRef = useRef(null);
   const [loading, setLoading] = useState(false);
+
+  const user = auth.currentUser;
 
   const showToast = () => {
     Toast.show({
@@ -52,6 +55,7 @@ const ResultScreen = ({ navigation, route }) => {
       const fileName = imageUri.split("/").pop();
       const fileType = "image/jpeg";
 
+      const token = await user.getIdToken();
       const formData = new FormData();
       formData.append("file", {
         uri: imageUri,
@@ -62,6 +66,7 @@ const ResultScreen = ({ navigation, route }) => {
       const response = await fetch(`${BACKEND_URL}/api/convert/image-to-pdf`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
         body: formData,
