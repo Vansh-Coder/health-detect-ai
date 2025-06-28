@@ -1,7 +1,8 @@
 fastapi
-uvicorn
-transformers[torch]
+uvicorn[standard]
+transformers
 torch
 python-multipart
 pillow
 cloudmersive-convert-api-client
+firebase-admin
