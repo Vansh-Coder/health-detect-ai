@@ -1,0 +1,31 @@
+# Byte-compiled / optimized files
+
+**pycache**/
+_.py[cod]
+_$py.class
+
+# Virtual environments
+
+venv/
+.env
+
+# Distribution / packaging
+
+build/
+dist/
+\*.egg-info/
+
+# Git
+
+.git/
+.gitignore
+
+# Docker metadata
+
+Dockerfile
+.dockerignore
+
+# Editor backups
+
+\*.swp
+.DS_Store
