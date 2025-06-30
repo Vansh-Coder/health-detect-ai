@@ -24,7 +24,7 @@ jobs:
             docker rm   healthdetect 2>/dev/null || true
             docker run -d \
               --name healthdetect \
-              -p 80:8000 \
+              -p 127.0.0.1:8000:8000 \
               -e CLOUDMERSIVE_API_KEY="${{ secrets.CLOUDMERSIVE_API_KEY }}" \
               -e GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}' \
               --restart unless-stopped \
