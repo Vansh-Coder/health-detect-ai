@@ -11,7 +11,11 @@ const Stack = createStackNavigator();
 
 const UnauthorizedStack = ({ setAuthenticated }) => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        gestureEnabled: false,
+      }}
+    >
       <Stack.Screen
         name="Onboarding"
         component={OnboardingScreen}
