@@ -25,7 +25,7 @@ jobs:
             docker run -d \
               --name healthdetect \
               -p 127.0.0.1:8000:8000 \
-              -e BACKEND_URL="${{ secrets.BACKEND_URL }}"
+              -e BACKEND_URL="${{ secrets.BACKEND_URL }}" \
               -e CLOUDMERSIVE_API_KEY="${{ secrets.CLOUDMERSIVE_API_KEY }}" \
               -e GOOGLE_APPLICATION_CREDENTIALS="${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" \
               --restart unless-stopped \
