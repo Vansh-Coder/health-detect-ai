@@ -1,5 +1,4 @@
 import os
-import json
 import shutil
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,7 +20,7 @@ from .schemas import ClassificationResult, ImageDiagnosisResult
 
 # initialize Firebase Admin SDK
 if not firebase_admin._apps:
-    cred = credentials.Certificate(json.loads(os.getenv("GOOGLE_APPLICATION_CREDENTIALS")))
+    cred = credentials.Certificate(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
     firebase_admin.initialize_app(cred)
 
 # for parsing the Authorization: Bearer <token> header
