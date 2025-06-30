@@ -1,0 +1,31 @@
+name: Deploy on Hetzner
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.HETZNER_HOST }}
+          username: ${{ secrets.HETZNER_USER }}
+          key: ${{ secrets.HETZNER_SSH_KEY }}
+          script: |
+            cd health-detect-ai
+            git pull origin main
+            docker build -t healthdetect-backend:latest ./backend
+            docker stop healthdetect 2>/dev/null || true
+            docker rm   healthdetect 2>/dev/null || true
+            docker run -d \
+              --name healthdetect \
+              -p 80:8000 \
+              -e CLOUDMERSIVE_API_KEY="${{ secrets.CLOUDMERSIVE_API_KEY }}" \
+              -e GOOGLE_APPLICATION_CREDENTIALS='${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}' \
+              --restart unless-stopped \
+              healthdetect-backend:latest
