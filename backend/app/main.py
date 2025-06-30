@@ -2,6 +2,7 @@ import os
 import json
 import shutil
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import StreamingResponse
 
@@ -46,6 +47,17 @@ async def verify_firebase_token(
         )
 
 app = FastAPI(title="HealthDetect AI")
+
+BACKEND_URL = os.getenv("BACKEND_URL")
+
+# CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[BACKEND_URL],
+    allow_credentials=True,
+    allow_methods=["POST"],
+    allow_headers=["Authorization", "Content-Type"]
+)
 
 # Cloudmersive API Key
 CLOUDMERSIVE_API_KEY = os.getenv("CLOUDMERSIVE_API_KEY")
