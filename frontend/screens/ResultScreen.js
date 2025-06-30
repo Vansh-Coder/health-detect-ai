@@ -49,7 +49,7 @@ const ResultScreen = ({ navigation, route }) => {
     try {
       const imageUri = await captureRef(viewRef, {
         format: "jpg",
-        quality: 1,
+        quality: 0.8,
       });
 
       const fileName = imageUri.split("/").pop();
@@ -106,11 +106,7 @@ const ResultScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-      <ViewShot
-        ref={viewRef}
-        options={{ format: "jpg", quality: 0.9 }}
-        style={styles.container}
-      >
+      <ViewShot ref={viewRef} style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>Diagnosis Results</Text>
         </View>
