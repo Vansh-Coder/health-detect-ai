@@ -53,7 +53,7 @@ BACKEND_URL = os.getenv("BACKEND_URL")
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[BACKEND_URL],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["POST"],
     allow_headers=["Authorization", "Content-Type"]
