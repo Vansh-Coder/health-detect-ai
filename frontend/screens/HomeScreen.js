@@ -206,6 +206,7 @@ const HomeScreen = ({ navigation }) => {
       return result;
     } catch (error) {
       console.log("Error occurred:", error);
+      showToast("Error, please try again !");
     }
   };
 
@@ -213,13 +214,8 @@ const HomeScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await uploadImage(image);
-      startTime = Date.now();
       const result = await fetchResults(image);
-      endTime = Date.now();
-      const elapsedTime = endTime - startTime;
-      const minutes = Math.floor(elapsedTime / 60000);
-      const seconds = ((elapsedTime % 60000) / 1000).toFixed(2);
-      console.log(`Time taken: ${minutes} minute(s) and ${seconds} second(s)`);
+
       if (result) {
         navigation.navigate("HomeStack", {
           screen: "Result",
@@ -230,6 +226,7 @@ const HomeScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.log("Error occured:", error);
+      showToast("Error, please try again !");
     } finally {
       setLoading(false);
     }
