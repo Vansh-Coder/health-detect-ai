@@ -1,5 +1,3 @@
-// Update fetch request as needed
-
 import { useState } from "react";
 import {
   View,
@@ -195,7 +193,6 @@ const HomeScreen = ({ navigation }) => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          // "Content-Type": "multipart/form-data",
         },
         body: formData,
       });
