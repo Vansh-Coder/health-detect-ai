@@ -1,5 +1,6 @@
 import os
 import shutil
+import base64
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -110,7 +111,8 @@ async def convert_image_to_pdf(
         api_instance = cloudmersive_convert_api_client.ConvertImageApi(api_client)
 
         # Convert to PDF
-        result = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
+        response = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
+        result = base64.b64decode(response)
         
         return Response(
             content=result,
