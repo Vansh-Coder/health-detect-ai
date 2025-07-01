@@ -3,7 +3,7 @@ import shutil
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, StreamingResponse
 
 import firebase_admin
 from firebase_admin import auth, credentials
@@ -109,15 +109,27 @@ async def convert_image_to_pdf(
     try:
         api_instance = cloudmersive_convert_api_client.ConvertImageApi(api_client)
 
-        # Convert to PDF
-        result = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
-
-        # Return the PDF as a stream
-        return StreamingResponse(
-            result,
+        # Pass a file-like, get back bytes
+        with open(temp_image_path, "rb") as img_fp:
+            pdf_bytes = api_instance.convert_image_image_format_convert(
+                "JPG", "PDF", img_fp
+            )
+        
+        return Response(
+            content=pdf_bytes,
             media_type="application/pdf",
-            headers={"Content-Disposition": "attachment; filename=converted.pdf"}
+            headers={"Content-Disposition": "attachment; filename=Diagnosis_Results.pdf"},
         )
+
+        # # Convert to PDF
+        # result = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
+
+        # # Return the PDF as a stream
+        # return StreamingResponse(
+        #     result,
+        #     media_type="application/pdf",
+        #     headers={"Content-Disposition": "attachment; filename=Diagnosis_Results.pdf"}
+        # )
 
     except ApiException as e:
         return {"error": f"PDF conversion failed: {e}"}
