@@ -109,14 +109,11 @@ async def convert_image_to_pdf(
     try:
         api_instance = cloudmersive_convert_api_client.ConvertImageApi(api_client)
 
-        # Pass a file-like, get back bytes
-        with open(temp_image_path, "rb") as img_fp:
-            pdf_bytes = api_instance.convert_image_image_format_convert(
-                "JPG", "PDF", img_fp
-            )
+        # Convert to PDF
+        result = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
         
         return Response(
-            content=pdf_bytes,
+            content=result,
             media_type="application/pdf",
             headers={"Content-Disposition": "attachment; filename=Diagnosis_Results.pdf"},
         )
