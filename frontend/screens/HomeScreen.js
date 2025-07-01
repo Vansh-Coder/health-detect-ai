@@ -29,9 +29,6 @@ const HomeScreen = ({ navigation }) => {
   const [imageAdded, setImageAdded] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  let startTime;
-  let endTime;
-
   const user = auth.currentUser;
 
   const showToast = (text) => {
