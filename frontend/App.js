@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import "react-native-reanimated";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
