@@ -82,7 +82,13 @@ const ResultScreen = ({ navigation, route }) => {
       reader.onloadend = async () => {
         const base64data = reader.result.split(",")[1];
 
-        const pdfUri = FileSystem.documentDirectory + "Diagnosis_Results.pdf";
+        const timestamp = new Date()
+          .toLocaleString("sv-SE", { hour12: false })
+          .replace(" ", "_")
+          .replace(/:/g, "-");
+        const fileName = `Diagnosis_Results_${timestamp}.pdf`;
+
+        const pdfUri = FileSystem.documentDirectory + fileName;
         await FileSystem.writeAsStringAsync(pdfUri, base64data, {
           encoding: FileSystem.EncodingType.Base64,
         });
