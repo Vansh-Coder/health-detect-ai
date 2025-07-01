@@ -1,20 +1,15 @@
 import os
-import shutil
-import base64
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import Response, StreamingResponse
+from fastapi.responses import StreamingResponse, JSONResponse
 
 import firebase_admin
 from firebase_admin import auth, credentials
 
-import cloudmersive_convert_api_client
-from cloudmersive_convert_api_client.rest import ApiException
-
 from io import BytesIO
 from PIL import Image
-import tempfile
+from reportlab.pdfgen import canvas
 
 from .models import get_image_classifier
 from .schemas import ClassificationResult, ImageDiagnosisResult
@@ -59,14 +54,6 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"]
 )
 
-# Cloudmersive API Key
-CLOUDMERSIVE_API_KEY = os.getenv("CLOUDMERSIVE_API_KEY")
-
-# Cloudmersive API configuration
-configuration = cloudmersive_convert_api_client.Configuration()
-configuration.api_key['Apikey'] = CLOUDMERSIVE_API_KEY
-api_client = cloudmersive_convert_api_client.ApiClient(configuration)
-
 # Candidate labels for Zero-Shot Image Classification
 CANDIDATE_LABELS = [
     "eczema", "psoriasis", "acne", "rash", "infection", "allergic reaction",
@@ -83,7 +70,7 @@ async def diagnose_image(
     2. Run zero-shot image classification.
     """
     image = Image.open(BytesIO(await file.read())).convert("RGB")
-    # 2. Zero-Shot Image Classification
+    # Zero-Shot Image Classification
     img_cls = get_image_classifier()(image, candidate_labels=CANDIDATE_LABELS, multi_label=False)
     # Ensure top-3
     top_labels = [entry["label"] for entry in img_cls[:3]]
@@ -100,37 +87,44 @@ async def convert_image_to_pdf(
     user=Depends(verify_firebase_token)
 ):
     """
-    Convert an uploaded image to a PDF using Cloudmersive API.
+    Convert an uploaded image to a one-page PDF entirely in-process.
     """
-    # Save uploaded image to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_image:
-        shutil.copyfileobj(file.file, temp_image)
-        temp_image_path = temp_image.name
-
     try:
-        api_instance = cloudmersive_convert_api_client.ConvertImageApi(api_client)
+        # Read the uploaded bytes
+        contents = await file.read()
 
-        # Convert to PDF
-        response = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
-        result = base64.b64decode(response)
-        
-        return Response(
-            content=result,
+        # Try opening as an image - if this fails, it’s a bad upload
+        try:
+            img = Image.open(BytesIO(contents))
+        except Exception:
+            return JSONResponse(
+                status_code=400,
+                content={"error": "Uploaded file is not a valid image"}
+            )
+
+        # Render the PDF in memory
+        pdf_buffer = BytesIO()
+        width_pt, height_pt = img.size
+        c = canvas.Canvas(pdf_buffer, pagesize=(width_pt, height_pt))
+        c.drawInlineImage(img, 0, 0, width_pt, height_pt)
+        c.showPage()
+        c.save()
+        pdf_buffer.seek(0)
+
+        # Stream the result back
+        return StreamingResponse(
+            pdf_buffer,
             media_type="application/pdf",
             headers={"Content-Disposition": "attachment; filename=Diagnosis_Results.pdf"},
         )
 
-        # # Convert to PDF
-        # result = api_instance.convert_image_image_format_convert("JPG", "PDF", temp_image_path)
+    except Exception as e:
+        # Anything unexpected becomes a 500 with a generic message
+        return JSONResponse(
+            status_code=500,
+            content={"error": "Failed to convert image to PDF"}
+        )
 
-        # # Return the PDF as a stream
-        # return StreamingResponse(
-        #     result,
-        #     media_type="application/pdf",
-        #     headers={"Content-Disposition": "attachment; filename=Diagnosis_Results.pdf"}
-        # )
-
-    except ApiException as e:
-        return {"error": f"PDF conversion failed: {e}"}
     finally:
-        os.remove(temp_image_path)
+        # Close & clean up FastAPI’s temp file
+        await file.close()
