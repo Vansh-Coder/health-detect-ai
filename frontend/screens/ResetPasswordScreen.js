@@ -7,8 +7,8 @@ import {
   Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { RFValue } from "react-native-responsive-fontsize";
 import Toast from "react-native-toast-message";
+import { RFValue } from "react-native-responsive-fontsize";
 import { auth } from "../firebaseConfig";
 import { sendPasswordResetEmail } from "firebase/auth";
 
