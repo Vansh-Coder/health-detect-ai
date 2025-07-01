@@ -84,12 +84,12 @@ const AboutScreen = () => {
           <Text style={styles.policyTitle}>Privacy Policy & ToS</Text>
           <Text
             style={[styles.policyText, { marginBottom: 5 }]}
-            onPress={handleTermsOfService}
+            onPress={handlePrivacyPolicy}
           >
-            Terms of Service
-          </Text>
-          <Text style={styles.policyText} onPress={handlePrivacyPolicy}>
             Privacy Policy
+          </Text>
+          <Text style={styles.policyText} onPress={handleTermsOfService}>
+            Terms of Service
           </Text>
         </View>
         <View style={styles.versionContainer}>

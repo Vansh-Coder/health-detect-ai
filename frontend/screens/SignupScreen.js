@@ -165,16 +165,16 @@ const SignupScreen = ({ navigation }) => {
               By continuing, you agree to our{" "}
               <Text
                 style={styles.disclaimerTextBold}
-                onPress={handleTermsOfService}
+                onPress={handlePrivacyPolicy}
               >
-                Terms of Service
+                Privacy Policy
               </Text>{" "}
               and{" "}
               <Text
                 style={styles.disclaimerTextBold}
-                onPress={handlePrivacyPolicy}
+                onPress={handleTermsOfService}
               >
-                Privacy Policy
+                Terms of Service
               </Text>
               .
             </Text>
