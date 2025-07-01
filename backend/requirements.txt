@@ -4,5 +4,5 @@ transformers
 torch
 python-multipart
 pillow
-cloudmersive-convert-api-client
+reportlab
 firebase-admin
