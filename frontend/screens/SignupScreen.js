@@ -43,6 +43,14 @@ const SignupScreen = ({ navigation }) => {
     });
   };
 
+  const handleTermsOfService = async () => {
+    console.log("Terms of Service pressed !");
+  };
+
+  const handlePrivacyPolicy = async () => {
+    console.log("Privacy Policy pressed !");
+  };
+
   const handleSignup = async () => {
     setLoading(true);
     try {
@@ -154,8 +162,21 @@ const SignupScreen = ({ navigation }) => {
           </View>
           <View style={styles.lowerContainer}>
             <Text style={styles.disclaimerText}>
-              By continuing, you agree to our Terms of Service and Privacy
-              Policy.
+              By continuing, you agree to our{" "}
+              <Text
+                style={styles.disclaimerTextBold}
+                onPress={handleTermsOfService}
+              >
+                Terms of Service
+              </Text>{" "}
+              and{" "}
+              <Text
+                style={styles.disclaimerTextBold}
+                onPress={handlePrivacyPolicy}
+              >
+                Privacy Policy
+              </Text>
+              .
             </Text>
             <TouchableOpacity
               style={styles.signupButton}
@@ -239,6 +260,12 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     textAlign: "center",
     marginBottom: 20,
+    color: "black",
+  },
+  disclaimerTextBold: {
+    fontSize: RFValue(10),
+    fontWeight: "bold",
+    color: "black",
   },
   signupButton: {
     flexDirection: "row",

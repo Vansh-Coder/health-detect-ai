@@ -43,6 +43,14 @@ const AboutScreen = () => {
     }
   };
 
+  const handlePrivacyPolicy = async () => {
+    console.log("Privacy Policy pressed !");
+  };
+
+  const handleTermsOfService = async () => {
+    console.log("Terms of Service pressed !");
+  };
+
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.container}>
@@ -71,6 +79,18 @@ const AboutScreen = () => {
               <Text style={styles.contactLink}>github.com/Vansh-Coder</Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.policyContainer}>
+          <Text style={styles.policyTitle}>Privacy Policy & ToS</Text>
+          <Text
+            style={[styles.policyText, { marginBottom: 5 }]}
+            onPress={handleTermsOfService}
+          >
+            Terms of Service
+          </Text>
+          <Text style={styles.policyText} onPress={handlePrivacyPolicy}>
+            Privacy Policy
+          </Text>
         </View>
         <View style={styles.versionContainer}>
           <Text style={styles.versionTitle}>App Version</Text>
@@ -153,6 +173,23 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     color: "blue",
     marginLeft: 10,
+  },
+  policyContainer: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginBottom: 25,
+  },
+  policyTitle: {
+    fontSize: RFValue(20),
+    fontWeight: "bold",
+    fontStyle: "italic",
+    marginBottom: 10,
+  },
+  policyText: {
+    fontSize: RFValue(14),
+    fontWeight: "500",
+    textDecorationLine: "underline",
+    color: "blue",
   },
   versionContainer: {
     justifyContent: "center",
