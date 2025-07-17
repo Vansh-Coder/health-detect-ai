@@ -117,6 +117,13 @@ const AboutScreen = () => {
             Terms of Service
           </Text>
         </View>
+        <View style={styles.disclaimerContainer}>
+          <Text style={styles.disclaimerTitle}>Medical Disclaimer</Text>
+          <Text style={styles.disclaimerText}>
+            Always consult a qualified medical professional for diagnosis and
+            treatment.
+          </Text>
+        </View>
         <View style={styles.versionContainer}>
           <Text style={styles.versionTitle}>App Version</Text>
           <Text style={styles.versionNumber}>{appVersion}</Text>
@@ -135,12 +142,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     paddingHorizontal: 30,
-    paddingVertical: 30,
+    paddingTop: 25,
   },
   descriptionContainer: {
     justifyContent: "center",
     alignItems: "flex-start",
-    marginBottom: 25,
+    marginBottom: 20,
   },
   descriptionTitle: {
     fontSize: RFValue(20),
@@ -155,7 +162,7 @@ const styles = StyleSheet.create({
   developerContainer: {
     justifyContent: "center",
     alignItems: "flex-start",
-    marginBottom: 25,
+    marginBottom: 20,
   },
   developerTitle: {
     fontSize: RFValue(20),
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
   contactContainer: {
     justifyContent: "center",
     alignItems: "flex-start",
-    marginBottom: 25,
+    marginBottom: 20,
   },
   contactTitle: {
     fontSize: RFValue(20),
@@ -202,7 +209,7 @@ const styles = StyleSheet.create({
   policyContainer: {
     justifyContent: "center",
     alignItems: "flex-start",
-    marginBottom: 25,
+    marginBottom: 20,
   },
   policyTitle: {
     fontSize: RFValue(20),
@@ -215,6 +222,21 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textDecorationLine: "underline",
     color: "blue",
+  },
+  disclaimerContainer: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginBottom: 20,
+  },
+  disclaimerTitle: {
+    fontSize: RFValue(20),
+    fontWeight: "bold",
+    fontStyle: "italic",
+    marginBottom: 10,
+  },
+  disclaimerText: {
+    fontSize: RFValue(14),
+    fontWeight: "500",
   },
   versionContainer: {
     justifyContent: "center",
