@@ -4,8 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
   Dimensions,
   Image,
 } from "react-native";
@@ -19,6 +17,7 @@ import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import LoadingScreen from "./LoadingScreen";
 import { auth, storage } from "../firebaseConfig";
 import { ref, uploadBytes } from "firebase/storage";
+import PermissionModal from "../components/PermissionModal";
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -28,6 +27,8 @@ const HomeScreen = ({ navigation }) => {
   const [image, setImage] = useState("");
   const [imageAdded, setImageAdded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalText, setModalText] = useState("");
 
   const user = auth.currentUser;
 
@@ -62,7 +63,8 @@ const HomeScreen = ({ navigation }) => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {
-      showToast("Camera access is required !");
+      setModalText("We need access to your camera to take photos.");
+      setModalVisible(true);
       return;
     }
 
@@ -95,7 +97,8 @@ const HomeScreen = ({ navigation }) => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (status !== "granted") {
-      showToast("Gallery access is required !");
+      setModalText("We need access to your photo library to select images.");
+      setModalVisible(true);
       return;
     }
 
@@ -235,79 +238,79 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View style={styles.container}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>Share Image for Diagnosis</Text>
-          </View>
-          {imageAdded ? (
-            <View style={styles.middleContainerWithImage}>
-              <View style={styles.imageContainer}>
-                <Image source={{ uri: image }} style={styles.image} />
-                <TouchableOpacity
-                  style={styles.removeButton}
-                  onPress={handleRemove}
-                >
-                  <FontAwesome name="remove" size={24} color="black" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.middleContainerWithoutImage}>
-              <View style={styles.middleButtonContainer}>
-                <TouchableOpacity
-                  style={styles.middleButton}
-                  onPress={handleCamera}
-                >
-                  <MaterialIcons
-                    name="add-a-photo"
-                    size={RFValue(30)}
-                    color="#ccc"
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.middleButtonContainer}>
-                <TouchableOpacity
-                  style={styles.middleButton}
-                  onPress={handleGallery}
-                >
-                  <MaterialIcons
-                    name="add-photo-alternate"
-                    size={RFValue(32)}
-                    color="#ccc"
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-          <View style={styles.lowerContainer}>
-            <TouchableOpacity
-              style={[
-                styles.submitButton,
-                {
-                  borderColor: imageAdded ? "black" : "#D3D3D3",
-                  backgroundColor: imageAdded ? "black" : "#999999",
-                },
-              ]}
-              onPress={handleSubmit}
-              disabled={!imageAdded}
-            >
-              <Text
-                style={[
-                  styles.submitButtonText,
-                  { color: imageAdded ? "white" : "#7D7D7D" },
-                ]}
-              >
-                Run Diagnosis
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}>Share Image for Diagnosis</Text>
         </View>
-      </TouchableWithoutFeedback>
+        {imageAdded ? (
+          <View style={styles.middleContainerWithImage}>
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: image }} style={styles.image} />
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={handleRemove}
+              >
+                <FontAwesome name="remove" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.middleContainerWithoutImage}>
+            <View style={styles.middleButtonContainer}>
+              <TouchableOpacity
+                style={styles.middleButton}
+                onPress={handleCamera}
+              >
+                <MaterialIcons
+                  name="add-a-photo"
+                  size={RFValue(30)}
+                  color="#ccc"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.middleButtonContainer}>
+              <TouchableOpacity
+                style={styles.middleButton}
+                onPress={handleGallery}
+              >
+                <MaterialIcons
+                  name="add-photo-alternate"
+                  size={RFValue(32)}
+                  color="#ccc"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        <View style={styles.lowerContainer}>
+          <TouchableOpacity
+            style={[
+              styles.submitButton,
+              {
+                borderColor: imageAdded ? "black" : "#D3D3D3",
+                backgroundColor: imageAdded ? "black" : "#999999",
+              },
+            ]}
+            onPress={handleSubmit}
+            disabled={!imageAdded}
+          >
+            <Text
+              style={[
+                styles.submitButtonText,
+                { color: imageAdded ? "white" : "#7D7D7D" },
+              ]}
+            >
+              Run Diagnosis
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <PermissionModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        modalText={modalText}
+      />
     </SafeAreaView>
   );
 };
