@@ -5,7 +5,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 const DrawerHeaderOptions = (navigation) => ({
   headerLeft: () => (
     <TouchableOpacity
-      style={{ marginLeft: 15 }}
+      style={{ marginLeft: 20 }}
       onPress={() => navigation.toggleDrawer()}
     >
       <Octicons name="three-bars" size={RFValue(18)} color="black" />
