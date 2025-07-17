@@ -16,7 +16,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.vansh.healthdetectai",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "We need access to your camera to take photos.",
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library to select images."
       }
     },
     "android": {
