@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Linking,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +17,7 @@ import Toast from "react-native-toast-message";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+const legalPolicyURL = "https://app-pp-and-tos.vercel.app/legal";
 const { width } = Dimensions.get("window");
 
 const LoginScreen = ({ navigation, setAuthenticated }) => {
@@ -38,6 +40,38 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
 
   const handleForgotPassword = () => {
     navigation.navigate("EnterEmail");
+  };
+
+  const handlePrivacyPolicy = async () => {
+    try {
+      const policyLink = `${legalPolicyURL}/privacy-policy`;
+      const supported = await Linking.canOpenURL(policyLink);
+
+      if (supported) {
+        await Linking.openURL(policyLink);
+      } else {
+        showToast("Error opening Privacy Policy, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening Privacy Policy, try again later !");
+      console.log("Error occured:", error);
+    }
+  };
+
+  const handleTermsOfService = async () => {
+    try {
+      const policyLink = `${legalPolicyURL}/terms-of-service`;
+      const supported = await Linking.canOpenURL(policyLink);
+
+      if (supported) {
+        await Linking.openURL(policyLink);
+      } else {
+        showToast("Error opening ToS, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening ToS, try again later !");
+      console.log("Error occured:", error);
+    }
   };
 
   const handleLogin = async () => {
@@ -108,8 +142,21 @@ const LoginScreen = ({ navigation, setAuthenticated }) => {
           </View>
           <View style={styles.lowerContainer}>
             <Text style={styles.disclaimerText}>
-              By continuing, you agree to our Terms of Service and Privacy
-              Policy.
+              By continuing, you agree to our{" "}
+              <Text
+                style={styles.disclaimerTextBold}
+                onPress={handlePrivacyPolicy}
+              >
+                Privacy Policy
+              </Text>{" "}
+              and{" "}
+              <Text
+                style={styles.disclaimerTextBold}
+                onPress={handleTermsOfService}
+              >
+                Terms of Service
+              </Text>
+              .
             </Text>
             <TouchableOpacity
               style={styles.loginButton}
@@ -206,6 +253,12 @@ const styles = StyleSheet.create({
     width: width * 0.8,
     textAlign: "center",
     marginBottom: 20,
+    color: "black",
+  },
+  disclaimerTextBold: {
+    fontSize: RFValue(10),
+    fontWeight: "bold",
+    color: "black",
   },
   loginButton: {
     flexDirection: "row",

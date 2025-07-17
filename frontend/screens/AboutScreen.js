@@ -12,6 +12,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { Ionicons } from "@expo/vector-icons";
 
 const githubURL = "https://github.com/Vansh-Coder";
+const legalPolicyURL = "https://app-pp-and-tos.vercel.app/legal";
 const appVersion = Constants.expoConfig.version;
 
 const AboutScreen = () => {
@@ -44,11 +45,35 @@ const AboutScreen = () => {
   };
 
   const handlePrivacyPolicy = async () => {
-    console.log("Privacy Policy pressed !");
+    try {
+      const policyLink = `${legalPolicyURL}/privacy-policy`;
+      const supported = await Linking.canOpenURL(policyLink);
+
+      if (supported) {
+        await Linking.openURL(policyLink);
+      } else {
+        showToast("Error opening Privacy Policy, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening Privacy Policy, try again later !");
+      console.log("Error occured:", error);
+    }
   };
 
   const handleTermsOfService = async () => {
-    console.log("Terms of Service pressed !");
+    try {
+      const policyLink = `${legalPolicyURL}/terms-of-service`;
+      const supported = await Linking.canOpenURL(policyLink);
+
+      if (supported) {
+        await Linking.openURL(policyLink);
+      } else {
+        showToast("Error opening ToS, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening ToS, try again later !");
+      console.log("Error occured:", error);
+    }
   };
 
   return (

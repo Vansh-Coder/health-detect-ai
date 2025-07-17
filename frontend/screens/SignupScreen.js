@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Linking,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +21,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 
+const legalPolicyURL = "https://app-pp-and-tos.vercel.app/legal";
 const { width } = Dimensions.get("window");
 
 const SignupScreen = ({ navigation }) => {
@@ -43,12 +45,36 @@ const SignupScreen = ({ navigation }) => {
     });
   };
 
-  const handleTermsOfService = async () => {
-    console.log("Terms of Service pressed !");
+  const handlePrivacyPolicy = async () => {
+    try {
+      const policyLink = `${legalPolicyURL}/privacy-policy`;
+      const supported = await Linking.canOpenURL(policyLink);
+
+      if (supported) {
+        await Linking.openURL(policyLink);
+      } else {
+        showToast("Error opening Privacy Policy, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening Privacy Policy, try again later !");
+      console.log("Error occured:", error);
+    }
   };
 
-  const handlePrivacyPolicy = async () => {
-    console.log("Privacy Policy pressed !");
+  const handleTermsOfService = async () => {
+    try {
+      const policyLink = `${legalPolicyURL}/terms-of-service`;
+      const supported = await Linking.canOpenURL(policyLink);
+
+      if (supported) {
+        await Linking.openURL(policyLink);
+      } else {
+        showToast("Error opening ToS, try again later !");
+      }
+    } catch (error) {
+      showToast("Error opening ToS, try again later !");
+      console.log("Error occured:", error);
+    }
   };
 
   const handleSignup = async () => {
