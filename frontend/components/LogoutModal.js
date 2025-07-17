@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   modalText: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(15),
     fontWeight: "600",
     textAlign: "center",
   },

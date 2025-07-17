@@ -58,7 +58,7 @@ const PermissionModal = ({ modalVisible, setModalVisible, modalText }) => {
             <View style={styles.modalButtonsContainer}>
               <View style={styles.okButtonContainer}>
                 <TouchableOpacity style={styles.okButton} onPress={handleOk}>
-                  <Text style={styles.okButtonText}>Ok</Text>
+                  <Text style={styles.okButtonText}>OK</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.settingsButtonContainer}>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   modalTextStyle: {
-    fontSize: RFValue(14),
+    fontSize: RFValue(15),
     fontWeight: "600",
     textAlign: "center",
   },
@@ -108,11 +108,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    // borderWidth: 1,
   },
   okButtonContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   okButton: {
     width: "80%",
@@ -128,9 +129,10 @@ const styles = StyleSheet.create({
     color: "white",
   },
   settingsButtonContainer: {
-    flex: 1,
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
+    // borderWidth: 1,
   },
   settingsButton: {
     width: "80%",
