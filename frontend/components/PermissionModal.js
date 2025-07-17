@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   settingsButtonContainer: {
-    flex: 2,
+    flex: 2.25,
     justifyContent: "center",
     alignItems: "center",
     // borderWidth: 1,
