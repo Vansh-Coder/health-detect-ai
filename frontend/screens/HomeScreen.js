@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
 
   const isImageTooLarge = async (image) => {
     try {
-      const limitMB = 5;
+      const limitMB = 10;
       const info = await FileSystem.getInfoAsync(image);
       const sizeInMB = info.size / (1024 * 1024);
 
@@ -80,7 +80,7 @@ const HomeScreen = ({ navigation }) => {
       const tooLarge = await isImageTooLarge(uri);
 
       if (tooLarge) {
-        showToast("Please share an image under 5MB !");
+        showToast("Please share an image under 10MB !");
         return;
       }
 
