@@ -9,9 +9,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import Constants from "expo-constants";
 import { RFValue } from "react-native-responsive-fontsize";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-const githubURL = "https://github.com/Vansh-Coder";
+const githubProfile = "github.com/Vansh-Coder";
+const contactEmail = "healthdetectai@gmail.com";
 const legalPolicyURL = "https://app-pp-and-tos.vercel.app/legal";
 const appVersion = Constants.expoConfig.version;
 
@@ -29,8 +30,9 @@ const AboutScreen = () => {
     });
   };
 
-  const handleContactLink = async () => {
+  const handleGithubLink = async () => {
     try {
+      const githubURL = `https://${githubProfile}`;
       const supported = await Linking.canOpenURL(githubURL);
 
       if (supported) {
@@ -40,6 +42,16 @@ const AboutScreen = () => {
       }
     } catch (error) {
       showToast("Error opening Github, try again later !");
+      console.log("Error occured:", error);
+    }
+  };
+
+  const handleContactLink = async () => {
+    try {
+      const contactLink = `mailto:${contactEmail}?subject=Support Request`;
+      await Linking.openURL(contactLink);
+    } catch (error) {
+      showToast("Error opening email, try again later !");
       console.log("Error occured:", error);
     }
   };
@@ -92,18 +104,23 @@ const AboutScreen = () => {
             <Text style={styles.developerName}>Vansh Gupta</Text> - An indie
             developer passionate about creating impactful tools.
           </Text>
+          <TouchableOpacity
+            style={styles.githubLinkContainer}
+            onPress={handleGithubLink}
+          >
+            <Ionicons name="logo-github" size={RFValue(22)} color="black" />
+            <Text style={styles.githubLink}>{githubProfile}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.contactContainer}>
           <Text style={styles.contactTitle}>Contact</Text>
-          <View style={styles.contactDescription}>
-            <TouchableOpacity
-              style={styles.contactLinkContainer}
-              onPress={handleContactLink}
-            >
-              <Ionicons name="logo-github" size={RFValue(22)} color="black" />
-              <Text style={styles.contactLink}>github.com/Vansh-Coder</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.contactLinkContainer}
+            onPress={handleContactLink}
+          >
+            <MaterialIcons name="email" size={RFValue(22)} color="black" />
+            <Text style={styles.contactLink}>{contactEmail}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.policyContainer}>
           <Text style={styles.policyTitle}>Privacy Policy & ToS</Text>
@@ -141,8 +158,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingHorizontal: 30,
-    paddingTop: 25,
+    paddingHorizontal: 25,
+    paddingTop: 20,
   },
   descriptionContainer: {
     justifyContent: "center",
@@ -173,10 +190,23 @@ const styles = StyleSheet.create({
   developerDescription: {
     fontSize: RFValue(14),
     fontWeight: "500",
+    marginBottom: 5,
   },
   developerName: {
     fontSize: RFValue(14),
     fontWeight: "bold",
+  },
+  githubLinkContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  githubLink: {
+    fontSize: RFValue(14),
+    fontWeight: "500",
+    textDecorationLine: "underline",
+    color: "blue",
+    marginLeft: 10,
   },
   contactContainer: {
     justifyContent: "center",
@@ -188,11 +218,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontStyle: "italic",
     marginBottom: 10,
-  },
-  contactDescription: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
   },
   contactLinkContainer: {
     flexDirection: "row",
