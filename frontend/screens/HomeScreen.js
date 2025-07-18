@@ -82,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
       const tooLarge = await isImageTooLarge(uri);
 
       if (tooLarge) {
-        showToast("Please share an image under 10MB !");
+        showToast("Please share image under 10MB !");
         return;
       }
 
@@ -116,7 +116,7 @@ const HomeScreen = ({ navigation }) => {
       const tooLarge = await isImageTooLarge(uri);
 
       if (tooLarge) {
-        showToast("Please share an image under 5MB !");
+        showToast("Please share image under 10MB !");
         return;
       }
 
