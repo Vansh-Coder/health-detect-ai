@@ -12,10 +12,10 @@
     </td>
     <td valign="middle" width="75%">
       <h1 style="margin: 0;">
-        <a href="https://rag-project-blond.vercel.app">HealthDetect AI</a>
+        <a href="https://rag-project-blond.vercel.app">Health Detect AI</a>
       </h1>
       <p style="margin: 0; font-style: italic;">
-        Cross-platform mobile app (React Native 📱) that empowers users with AI-powered skin and injury diagnosis.
+        React Native mobile app (🍏 & 🤖) that empowers users with AI-powered skin and injury diagnosis.
       </p>
       <p style="margin-top: 8px;">
         <img
@@ -125,9 +125,9 @@ Cross-platform mobile app (React Native 📱) that empowers users with AI-powere
 ## ✨ Highlights
 
 - **Zero-shot image diagnosis using CLIP** — 85% accuracy on 200-image test set across **6 skin** and **7 injury** categories (e.g. eczema, acne, bruises, burns).
-- **Lightning-fast inference:** top-3 predictions in under **2 seconds**.
+- **Lightning-fast inference:** top-3 predictions in under **5 seconds**.
 - **Secure user auth & media uploads** via Firebase Auth and Storage—handles 500+ image uploads with atomic safety.
-- **Image-to-PDF conversion** using Cloudmersive API for easy sharing.
+- **Image-to-PDF conversion** using Python ReportLab for easy sharing.
 - **Production-ready backend**: Dockerized FastAPI hosted on Hetzner CX11, behind Nginx + Let’s Encrypt TLS, always-warm with zero cold-start.
 - **CI/CD with GitHub Actions** — automatic SSH-based deploys on git push.
 - **App Store launch** completed using Expo EAS build, fully managed—no eject required.
@@ -183,10 +183,10 @@ HealthDetect AI simplifies medical triage—with just a photo. Upload or capture
   - `transformers` CLIP implementation for zero-shot inference  
   - Firebase integration (Admin SDK)  
   - Cloudmersive Convert API  
-  - Docker container, exposed on `127.0.0.1:8000`
+  - Docker container, exposed on `localhost` within VPS (Hetzner)
 
 - **Infrastructure:**  
-  - Hetzner CX11 VM + Docker  
+  - Hetzner CX22 VM + Docker  
   - Nginx reverse proxy + Let’s Encrypt TLS certs  
   - Perimeter and host-based firewalls  
   - Always-on CLIP model with zero cold start
@@ -205,10 +205,10 @@ git clone https://github.com/Vansh-Coder/health-detect-ai.git
 cd health-detect-ai/frontend
 npm install
 ```
-- Create `src/config.js` with `API_BASE_URL` and Firebase config  
+- Create `.env` with `EXPO_PUBLIC_BACKEND_URL` (localhost if running locally) and `firebaseConfig.js` with Firebase configuration  
 - Run locally:
   ```bash
-  expo start
+  npx expo start
   ```
 
 #### Backend
@@ -216,19 +216,17 @@ npm install
 cd ../backend
 docker build -t healthdetect-backend:latest .
 ```
+(or git push something for automatic deployment when not running locally)
 
 - Prepare environment variables:  
-  - `CLOUDMERSIVE_API_KEY`  
   - `GOOGLE_APPLICATION_CREDENTIALS_JSON` (Firebase key)
 
 - Run locally:
   ```bash
   docker run -p 8000:8000 \
-    -e CLOUDMERSIVE_API_KEY=... \
-    -e GOOGLE_APPLICATION_CREDENTIALS='{"...":...}' \
+    -e GOOGLE_APPLICATION_CREDENTIALS='...' \
     healthdetect-backend:latest
   ```
-
 ---
 
 ## 🧩 Building & Publishing
@@ -251,7 +249,7 @@ eas submit -p ios
 ```
 Managed via Expo EAS—no native code required.
 
-#### Android (Upcoming)
+#### Android (Play Store)
 ```bash
 eas build -p android --profile production
 eas submit -p android
@@ -261,17 +259,15 @@ eas submit -p android
 
 ## 🚀 Future Roadmap
 
-- 🧪 Android App release  
-- 🔄 Enhanced ML accuracy via fine-tuning  
-- 🌐 Custom domain + branding for frontend  
 - 📈 Analytics & remote config  
+- 🌐 Custom domain + branding for frontend  
 - 🧵 Health record storage & retrieval
 
 ---
 
-## 👤 About & Contact
+## 👤 Developer & Contact
 
-**Vansh Gupta** — Full-stack ML engineer & mobile dev.  
+**Vansh Gupta** — Full-stack AI/ML engineer & software developer.  
 GitHub: [@Vansh-Coder](https://github.com/Vansh-Coder)  
 Email: vgupta95@asu.edu
 
