@@ -1,6 +1,6 @@
 <table width="100%">
   <tr>
-    <td valign="middle" width="20%">
+    <td valign="middle" width="25%">
       <a href="https://rag-project-blond.vercel.app">
         <img
           src="frontend/assets/AppIcon.png"
@@ -10,7 +10,7 @@
         />
       </a>
     </td>
-    <td valign="middle" width="80%">
+    <td valign="middle" width="75%">
       <h1 style="margin: 0;">
         <a href="https://rag-project-blond.vercel.app">HealthDetect AI</a>
       </h1>
