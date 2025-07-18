@@ -165,12 +165,13 @@ HealthDetect AI simplifies medical triage—with just a photo. Upload or capture
 ## 🏗️ Architecture & Tech Stack
 
 ```
-[Expo React Native App] → HTTPS → [Nginx + TLS Proxy on Hetzner]
-                                               ↓
-                                      [Docker FastAPI Container]
-                                          • CLIP via transformers
-                                          • Firebase Auth & Storage
-                                          • Cloudmersive "image-to-pdf"
+[React Native App (iOS/Android)]
+         └──HTTPS──> [Nginx + TLS] ──> [FastAPI Container on Hetzner]
+                                          ├─ /diagnosis → CLIP → ai response
+                                          └─ /convert → Python ReportLab → returns PDF
+
+Auth & Storage → Firebase
+CI/CD → GitHub Actions → SSH deploy → Hetzner VM
 ```
 
 - **Frontend:**  
