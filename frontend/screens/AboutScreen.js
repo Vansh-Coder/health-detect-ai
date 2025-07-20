@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   View,
   Text,
@@ -9,14 +10,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import Constants from "expo-constants";
 import { RFValue } from "react-native-responsive-fontsize";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import DeleteAccountModal from "../components/DeleteAccountModal";
 
-const githubProfile = "github.com/Vansh-Coder";
 const contactEmail = "healthdetectai@gmail.com";
 const legalPolicyURL = "https://app-pp-and-tos.vercel.app/legal";
 const appVersion = Constants.expoConfig.version;
 
 const AboutScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
   const showToast = (text) => {
     Toast.show({
       type: "info",
@@ -30,22 +33,6 @@ const AboutScreen = () => {
     });
   };
 
-  const handleGithubLink = async () => {
-    try {
-      const githubURL = `https://${githubProfile}`;
-      const supported = await Linking.canOpenURL(githubURL);
-
-      if (supported) {
-        await Linking.openURL(githubURL);
-      } else {
-        showToast("Error opening Github, try again later !");
-      }
-    } catch (error) {
-      showToast("Error opening Github, try again later !");
-      console.log("Error occured:", error);
-    }
-  };
-
   const handleContactLink = async () => {
     try {
       const contactLink = `mailto:${contactEmail}?subject=Support Request`;
@@ -54,6 +41,10 @@ const AboutScreen = () => {
       showToast("Error opening email, try again later !");
       console.log("Error occured:", error);
     }
+  };
+
+  const handleDeleteAccount = () => {
+    setModalVisible(true);
   };
 
   const handlePrivacyPolicy = async () => {
@@ -98,19 +89,12 @@ const AboutScreen = () => {
             diagnosis for skin diseases and common visible injuries !
           </Text>
         </View>
-        <View style={styles.developerContainer}>
-          <Text style={styles.developerTitle}>Developer</Text>
-          <Text style={styles.developerDescription}>
-            <Text style={styles.developerName}>Vansh Gupta</Text> - An indie
-            developer passionate about creating impactful tools.
+        <View style={styles.disclaimerContainer}>
+          <Text style={styles.disclaimerTitle}>Medical Disclaimer</Text>
+          <Text style={styles.disclaimerText}>
+            Always consult a qualified medical professional for diagnosis and
+            treatment.
           </Text>
-          <TouchableOpacity
-            style={styles.githubLinkContainer}
-            onPress={handleGithubLink}
-          >
-            <Ionicons name="logo-github" size={RFValue(22)} color="black" />
-            <Text style={styles.githubLink}>{githubProfile}</Text>
-          </TouchableOpacity>
         </View>
         <View style={styles.contactContainer}>
           <Text style={styles.contactTitle}>Contact</Text>
@@ -134,18 +118,25 @@ const AboutScreen = () => {
             Terms of Service
           </Text>
         </View>
-        <View style={styles.disclaimerContainer}>
-          <Text style={styles.disclaimerTitle}>Medical Disclaimer</Text>
-          <Text style={styles.disclaimerText}>
-            Always consult a qualified medical professional for diagnosis and
-            treatment.
-          </Text>
+        <View style={styles.deleteAccountContainer}>
+          <Text style={styles.deleteAccountTitle}>Delete Account</Text>
+          <TouchableOpacity
+            style={styles.deleteAccountButton}
+            onPress={handleDeleteAccount}
+          >
+            <Text style={styles.deleteAccountText}>Delete my account</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.versionContainer}>
           <Text style={styles.versionTitle}>App Version</Text>
           <Text style={styles.versionNumber}>{appVersion}</Text>
         </View>
       </View>
+
+      <DeleteAccountModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </SafeAreaView>
   );
 };
@@ -158,8 +149,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingHorizontal: 25,
-    paddingTop: 20,
+    padding: 25,
   },
   descriptionContainer: {
     justifyContent: "center",
@@ -175,38 +165,6 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: RFValue(14),
     fontWeight: "500",
-  },
-  developerContainer: {
-    justifyContent: "center",
-    alignItems: "flex-start",
-    marginBottom: 20,
-  },
-  developerTitle: {
-    fontSize: RFValue(20),
-    fontWeight: "bold",
-    fontStyle: "italic",
-    marginBottom: 10,
-  },
-  developerDescription: {
-    fontSize: RFValue(14),
-    fontWeight: "500",
-    marginBottom: 5,
-  },
-  developerName: {
-    fontSize: RFValue(14),
-    fontWeight: "bold",
-  },
-  githubLinkContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  githubLink: {
-    fontSize: RFValue(14),
-    fontWeight: "500",
-    textDecorationLine: "underline",
-    color: "blue",
-    marginLeft: 10,
   },
   contactContainer: {
     justifyContent: "center",
@@ -262,6 +220,30 @@ const styles = StyleSheet.create({
   disclaimerText: {
     fontSize: RFValue(14),
     fontWeight: "500",
+  },
+  deleteAccountContainer: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginBottom: 20,
+  },
+  deleteAccountTitle: {
+    fontSize: RFValue(20),
+    fontWeight: "bold",
+    fontStyle: "italic",
+    marginBottom: 10,
+  },
+  deleteAccountButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 7,
+    borderColor: "red",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  deleteAccountText: {
+    fontSize: RFValue(14),
+    color: "red",
   },
   versionContainer: {
     justifyContent: "center",
