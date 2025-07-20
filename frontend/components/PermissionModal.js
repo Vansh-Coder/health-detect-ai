@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
   },
   okButtonContainer: {
     flex: 1,
@@ -132,7 +131,6 @@ const styles = StyleSheet.create({
     flex: 2.25,
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
   },
   settingsButton: {
     width: "80%",
