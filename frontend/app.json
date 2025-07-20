@@ -17,8 +17,8 @@
       "bundleIdentifier": "com.vansh.healthdetectai.revamp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "We need access to your camera to take photos.",
-        "NSPhotoLibraryUsageDescription": "We need access to your photo library to select images."
+        "NSCameraUsageDescription": "The app uses the camera to take photos of skin conditions or injuries for AI analysis.",
+        "NSPhotoLibraryUsageDescription": "The app uses your photo library to let you upload images of skin conditions or injuries for AI analysis."
       }
     },
     "android": {
