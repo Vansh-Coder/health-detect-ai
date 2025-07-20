@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { MaterialIcons } from "@expo/vector-icons";
+import { RFValue } from "react-native-responsive-fontsize";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import DrawerHeaderOptions from "../components/DrawerHeaderOptions";
 import HomeStack from "./HomeStack";
-import FeedbackScreen from "../screens/FeedbackScreen";
+import DeveloperScreen from "../screens/DeveloperScreen";
 import AboutScreen from "../screens/AboutScreen";
+import FeedbackScreen from "../screens/FeedbackScreen";
 import LogoutModal from "../components/LogoutModal";
 
 const Drawer = createDrawerNavigator();
@@ -29,6 +31,9 @@ const OptionsDrawer = ({ setAuthenticated }) => {
         <DrawerItem
           label="Logout"
           onPress={handleLogoutOption}
+          labelStyle={{
+            fontSize: RFValue(13),
+          }}
           icon={({ color, size }) => (
             <MaterialIcons name="logout" size={size} color={color} />
           )}
@@ -48,6 +53,9 @@ const OptionsDrawer = ({ setAuthenticated }) => {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={({ navigation }) => ({
         drawerType: "front",
+        drawerLabelStyle: {
+          fontSize: RFValue(13),
+        },
         ...DrawerHeaderOptions(navigation),
       })}
     >
@@ -64,11 +72,11 @@ const OptionsDrawer = ({ setAuthenticated }) => {
         }}
       />
       <Drawer.Screen
-        name="Feedback"
-        component={FeedbackScreen}
+        name="Developer"
+        component={DeveloperScreen}
         options={{
           drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="feedback" size={size} color={color} />
+            <Ionicons name="logo-github" size={size} color={color} />
           ),
         }}
       />
@@ -78,6 +86,15 @@ const OptionsDrawer = ({ setAuthenticated }) => {
         options={{
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="info-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Feedback"
+        component={FeedbackScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <MaterialIcons name="feedback" size={size} color={color} />
           ),
         }}
       />
