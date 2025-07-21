@@ -166,6 +166,21 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
     fontWeight: "500",
   },
+  disclaimerContainer: {
+    justifyContent: "center",
+    alignItems: "flex-start",
+    marginBottom: 20,
+  },
+  disclaimerTitle: {
+    fontSize: RFValue(20),
+    fontWeight: "bold",
+    fontStyle: "italic",
+    marginBottom: 10,
+  },
+  disclaimerText: {
+    fontSize: RFValue(14),
+    fontWeight: "500",
+  },
   contactContainer: {
     justifyContent: "center",
     alignItems: "flex-start",
@@ -205,21 +220,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textDecorationLine: "underline",
     color: "blue",
-  },
-  disclaimerContainer: {
-    justifyContent: "center",
-    alignItems: "flex-start",
-    marginBottom: 20,
-  },
-  disclaimerTitle: {
-    fontSize: RFValue(20),
-    fontWeight: "bold",
-    fontStyle: "italic",
-    marginBottom: 10,
-  },
-  disclaimerText: {
-    fontSize: RFValue(14),
-    fontWeight: "500",
   },
   deleteAccountContainer: {
     justifyContent: "center",
