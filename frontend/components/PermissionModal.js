@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   settingsButtonContainer: {
-    flex: 2.25,
+    flex: 2.5,
     justifyContent: "center",
     alignItems: "center",
   },
