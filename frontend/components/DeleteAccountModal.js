@@ -1,18 +1,40 @@
+import { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
+  TextInput,
   Modal,
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { RFValue } from "react-native-responsive-fontsize";
+import { auth } from "../firebaseConfig";
+import {
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 
 const { width, height } = Dimensions.get("window");
 
 const DeleteAccountModal = ({ modalVisible, setModalVisible }) => {
+  const [firstLoading, setFirstLoading] = useState(false);
+  const [secondLoading, setSecondLoading] = useState(false);
+  const [needPassword, setNeedPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const isMounted = useRef(true);
+
+  const user = auth.currentUser;
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   const showToast = (text) => {
     Toast.show({
       type: "info",
@@ -31,13 +53,42 @@ const DeleteAccountModal = ({ modalVisible, setModalVisible }) => {
   };
 
   const handleDelete = async () => {
+    setFirstLoading(true);
     try {
-      console.log("Delete option pressed !");
+      await deleteUser(user);
+      showToast("Account deleted successfully.");
     } catch (error) {
-      showToast("Error deleting account, try again later !");
+      if (error.code === "auth/requires-recent-login") {
+        setNeedPassword(true);
+      } else {
+        showToast("Error, please email your request !");
+        console.log("Error occured:", error);
+      }
+    } finally {
+      if (isMounted.current) {
+        setFirstLoading(false);
+        if (error.code !== "auth/requires-recent-login") {
+          setModalVisible(false);
+        }
+      }
+    }
+  };
+
+  const handlePasswordVerification = async () => {
+    setSecondLoading(true);
+    try {
+      const credential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, credential);
+      await deleteUser(user);
+      showToast("Account deleted successfully.");
+    } catch (error) {
+      showToast("Error, please email your request !");
       console.log("Error occured:", error);
     } finally {
-      setModalVisible(false);
+      if (isMounted.current) {
+        setSecondLoading(false);
+        setModalVisible(false);
+      }
     }
   };
 
@@ -48,33 +99,72 @@ const DeleteAccountModal = ({ modalVisible, setModalVisible }) => {
       visible={modalVisible}
       onRequestClose={handleCancel}
     >
-      <TouchableWithoutFeedback onPress={handleCancel}>
+      <TouchableWithoutFeedback
+        onPress={handleCancel}
+        disabled={firstLoading || secondLoading}
+      >
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
-            <View style={styles.modalTextContainer}>
-              <Text style={styles.modalText}>
-                Are you sure you want to delete your account and all related
-                information ?
-              </Text>
-            </View>
-            <View style={styles.modalButtonsContainer}>
-              <View style={styles.cancelButtonContainer}>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={handleCancel}
-                >
-                  <Text style={styles.cancelButtonText}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.deleteButtonContainer}>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={handleDelete}
-                >
-                  <Text style={styles.deleteButtonText}>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            {needPassword ? (
+              <>
+                <View style={styles.instructionTitleContainer}>
+                  <Text style={styles.instructionTitleText}>
+                    Please enter your password
+                  </Text>
+                </View>
+                <View style={styles.instructionFieldContainer}>
+                  <TextInput
+                    style={styles.instructionField}
+                    placeholder="Password"
+                    secureTextEntry
+                    onChangeText={(val) => setPassword(val)}
+                    autoCapitalize="none"
+                  />
+                </View>
+                <View style={styles.instructionButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.instructionButton}
+                    onPress={handlePasswordVerification}
+                    disabled={secondLoading}
+                  >
+                    <Text style={styles.instructionButtonText}>
+                      {secondLoading ? "Confirming" : "Confirm"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={styles.modalTextContainer}>
+                  <Text style={styles.modalText}>
+                    Are you sure you want to delete your account? This action
+                    cannot be undone.
+                  </Text>
+                </View>
+                <View style={styles.modalButtonsContainer}>
+                  <View style={styles.cancelButtonContainer}>
+                    <TouchableOpacity
+                      style={styles.cancelButton}
+                      onPress={handleCancel}
+                      disabled={firstLoading}
+                    >
+                      <Text style={styles.cancelButtonText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.deleteButtonContainer}>
+                    <TouchableOpacity
+                      style={styles.deleteButton}
+                      onPress={handleDelete}
+                      disabled={firstLoading}
+                    >
+                      <Text style={styles.deleteButtonText}>
+                        {firstLoading ? "Deleting" : "Delete"}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </>
+            )}
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -97,6 +187,47 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
+  },
+  instructionTitleContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  instructionTitleText: {
+    fontSize: RFValue(14),
+    fontWeight: "600",
+  },
+  instructionFieldContainer: {
+    borderWidth: 2,
+    justifyContent: "center",
+    borderRadius: 10,
+    borderColor: "#ccc",
+    backgroundColor: "white",
+    marginBottom: 15,
+  },
+  instructionField: {
+    width: width * 0.55,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    fontSize: RFValue(14),
+  },
+  instructionButtonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  instructionButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "black",
+    backgroundColor: "black",
+    padding: 10,
+  },
+  instructionButtonText: {
+    fontSize: RFValue(13),
+    fontWeight: "bold",
+    color: "white",
   },
   modalTextContainer: {
     flex: 1,
