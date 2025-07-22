@@ -86,7 +86,7 @@ const ResultScreen = ({ navigation, route }) => {
           .toLocaleString("sv-SE", { hour12: false })
           .replace(" ", "_")
           .replace(/:/g, "-");
-        const fileName = `Diagnosis_Results_${timestamp}.pdf`;
+        const fileName = `Analysis_Results_${timestamp}.pdf`;
 
         const pdfUri = FileSystem.documentDirectory + fileName;
         await FileSystem.writeAsStringAsync(pdfUri, base64data, {
@@ -113,7 +113,7 @@ const ResultScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <ViewShot ref={viewRef} style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Diagnosis Results</Text>
+          <Text style={styles.titleText}>Analysis Results</Text>
         </View>
         <View style={styles.resultContainer}>
           {result.classification.labels.map((label, index) => (
@@ -134,7 +134,7 @@ const ResultScreen = ({ navigation, route }) => {
             disabled={loading}
           >
             <Text style={[styles.buttonText, { color: "white" }]}>
-              New Diagnosis
+              New Analysis
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
