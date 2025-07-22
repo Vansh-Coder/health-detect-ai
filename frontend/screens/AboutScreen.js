@@ -85,8 +85,8 @@ const AboutScreen = () => {
         <View style={styles.descriptionContainer}>
           <Text style={styles.descriptionTitle}>About</Text>
           <Text style={styles.descriptionText}>
-            HealthDetect AI is designed to help with quick and accurate image
-            diagnosis for skin diseases and common visible injuries !
+            Health Detect AI is an educational tool that uses AI to identify
+            possible skin conditions and common visible injuries in photos.
           </Text>
         </View>
         <View style={styles.disclaimerContainer}>
