@@ -115,7 +115,7 @@ async def convert_image_to_pdf(
         return StreamingResponse(
             pdf_buffer,
             media_type="application/pdf",
-            headers={"Content-Disposition": "attachment; filename=Analysis_Results.pdf"},
+            headers={"Content-Disposition": "attachment; filename=Classification_Results.pdf"},
         )
 
     except Exception as e:
