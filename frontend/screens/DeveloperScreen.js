@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   titleText: {
-    fontSize: RFValue(20),
+    fontSize: RFValue(24),
     fontWeight: "bold",
   },
   descriptionContainer: {
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   },
   developerName: {
     fontSize: RFValue(18),
-    fontWeight: "600",
+    fontWeight: "bold",
     fontStyle: "italic",
     marginBottom: 15,
   },
