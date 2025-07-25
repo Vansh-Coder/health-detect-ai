@@ -6,11 +6,12 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import { RFValue } from "react-native-responsive-fontsize";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import DrawerHeaderOptions from "../components/DrawerHeaderOptions";
 import HomeStack from "./HomeStack";
 import DeveloperScreen from "../screens/DeveloperScreen";
 import AboutScreen from "../screens/AboutScreen";
+import CitationsScreen from "../screens/CitationsScreen";
 import FeedbackScreen from "../screens/FeedbackScreen";
 import LogoutModal from "../components/LogoutModal";
 
@@ -86,6 +87,15 @@ const OptionsDrawer = ({ setAuthenticated }) => {
         options={{
           drawerIcon: ({ color, size }) => (
             <MaterialIcons name="info-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Citations"
+        component={CitationsScreen}
+        options={{
+          drawerIcon: ({ color, size }) => (
+            <Feather name="book-open" size={size} color={color} />
           ),
         }}
       />
