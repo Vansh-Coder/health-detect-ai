@@ -85,15 +85,16 @@ const AboutScreen = () => {
         <View style={styles.descriptionContainer}>
           <Text style={styles.descriptionTitle}>About</Text>
           <Text style={styles.descriptionText}>
-            Health Detect AI is an educational tool that uses AI to identify
+            Health Detect AI is an educational tool that uses AI to classify
             possible skin conditions and common visible injuries in photos.
           </Text>
         </View>
         <View style={styles.disclaimerContainer}>
           <Text style={styles.disclaimerTitle}>Medical Disclaimer</Text>
           <Text style={styles.disclaimerText}>
-            Always consult a qualified medical professional for diagnosis and
-            treatment.
+            Health Detect AI is not a medical device. It is for
+            educational/reference purposes only. Always consult a qualified
+            healthcare professional.
           </Text>
         </View>
         <View style={styles.contactContainer}>
