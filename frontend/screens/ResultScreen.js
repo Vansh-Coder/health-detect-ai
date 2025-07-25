@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ViewShot, { captureRef } from "react-native-view-shot";
+import { RFValue } from "react-native-responsive-fontsize";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import Toast from "react-native-toast-message";
-import { RFValue } from "react-native-responsive-fontsize";
+import DisclaimerModal from "../components/DisclaimerModal";
 import ResultBar from "../components/ResultBar";
 import { auth } from "../firebaseConfig";
 
@@ -22,10 +23,16 @@ const { width } = Dimensions.get("window");
 
 const ResultScreen = ({ navigation, route }) => {
   const { result } = route.params || "";
+
   const viewRef = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const user = auth.currentUser;
+
+  useEffect(() => {
+    setModalVisible(true);
+  }, []);
 
   const showToast = () => {
     Toast.show({
@@ -86,7 +93,7 @@ const ResultScreen = ({ navigation, route }) => {
           .toLocaleString("sv-SE", { hour12: false })
           .replace(" ", "_")
           .replace(/:/g, "-");
-        const fileName = `Analysis_Results_${timestamp}.pdf`;
+        const fileName = `Classification_Results_${timestamp}.pdf`;
 
         const pdfUri = FileSystem.documentDirectory + fileName;
         await FileSystem.writeAsStringAsync(pdfUri, base64data, {
@@ -113,7 +120,7 @@ const ResultScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <ViewShot ref={viewRef} style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Analysis Results</Text>
+          <Text style={styles.titleText}>Classification Results</Text>
         </View>
         <View style={styles.resultContainer}>
           {result.classification.labels.map((label, index) => (
@@ -134,7 +141,7 @@ const ResultScreen = ({ navigation, route }) => {
             disabled={loading}
           >
             <Text style={[styles.buttonText, { color: "white" }]}>
-              New Analysis
+              New Classification
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -162,6 +169,11 @@ const ResultScreen = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
       </ViewShot>
+
+      <DisclaimerModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </SafeAreaView>
   );
 };
@@ -183,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    fontSize: RFValue(26),
+    fontSize: RFValue(25),
     fontWeight: "bold",
   },
   resultContainer: {
