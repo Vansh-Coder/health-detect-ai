@@ -240,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>Share Image for Analysis</Text>
+          <Text style={styles.titleText}>Share Image for Classification</Text>
         </View>
         {imageAdded ? (
           <View style={styles.middleContainerWithImage}>
@@ -300,7 +300,7 @@ const HomeScreen = ({ navigation }) => {
                 { color: imageAdded ? "white" : "#7D7D7D" },
               ]}
             >
-              Run Analysis
+              Run Classification
             </Text>
           </TouchableOpacity>
         </View>
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleText: {
-    fontSize: RFValue(22),
+    fontSize: RFValue(20),
     fontWeight: "bold",
     textAlign: "center",
   },
