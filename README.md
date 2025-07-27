@@ -154,11 +154,11 @@ HealthDetect AI simplifies medical triage - with just a photo. Upload or capture
 
 ## 🛠️ Screens & User Flow
 
-- **🎬 Splash & Auth** – User sign‑in / sign‑up via Firebase.  
-- **📸 Capture/Upload** – Native camera and gallery integration.  
-- **⏳ Loading & Result** – AI-powered classification with confidence scores.  
-- **📄 Save as PDF** – Download or share full diagnostic as editable PDF.  
-- **⚙️ Settings & Info** – App details, versioning, terms, privacy.
+- **🎬 Splash & Auth** - User sign‑in / sign‑up via Firebase.  
+- **📸 Capture/Upload** - Native camera and gallery integration.  
+- **⏳ Loading & Result** - AI-powered classification with confidence scores.  
+- **📄 Save as PDF** - Download or share full diagnostic as editable PDF.  
+- **⚙️ Settings & Info** - App details, versioning, terms, privacy.
 
 ---
 
