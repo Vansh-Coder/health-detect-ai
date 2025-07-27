@@ -15,7 +15,7 @@
         <a href="https://rag-project-blond.vercel.app">Health Detect AI</a>
       </h1>
       <p style="margin: 0; font-style: italic;">
-        React Native mobile app (🍏 & 🤖) that empowers users with AI-powered skin and injury diagnosis.
+        <strong>React Native mobile app (🍏 & 🤖) that empowers users with AI-powered skin and injury diagnosis.</strong>
       </p>
       <p style="margin-top: 8px;">
         <img
@@ -36,7 +36,7 @@
         />
       </p>
       <p style="margin-top: 16px; font-style: italic;">
-        Built with the tools and technologies:
+        <strong>Built with the tools and technologies:</strong>
       </p>
       <p style="margin: 4px 0;">
         <img
@@ -124,13 +124,13 @@ Cross-platform mobile app (React Native 📱) that empowers users with AI-powere
 
 ## ✨ Highlights
 
-- **Zero-shot image diagnosis using CLIP** — 85% accuracy on 200-image test set across **6 skin** and **7 injury** categories (e.g. eczema, acne, bruises, burns).
+- **Zero-shot image diagnosis using CLIP** - 85% accuracy on 200-image test set across **6 skin** and **7 injury** categories (e.g. eczema, acne, bruises, burns).
 - **Lightning-fast inference:** top-3 predictions in under **5 seconds**.
-- **Secure user auth & media uploads** via Firebase Auth and Storage—handles 500+ image uploads with atomic safety.
+- **Secure user auth & media uploads** via Firebase Auth and Storage - handles 500+ image uploads with atomic safety.
 - **Image-to-PDF conversion** using Python ReportLab for easy sharing.
 - **Production-ready backend**: Dockerized FastAPI hosted on Hetzner CX11, behind Nginx + Let’s Encrypt TLS, always-warm with zero cold-start.
-- **CI/CD with GitHub Actions** — automatic SSH-based deploys on git push.
-- **App Store launch** completed using Expo EAS build, fully managed—no eject required.
+- **CI/CD with GitHub Actions** - automatic SSH-based deploys on git push.
+- **App Store launch** completed using Expo EAS build, fully managed - no eject required.
 
 ---
 
@@ -148,7 +148,7 @@ Cross-platform mobile app (React Native 📱) that empowers users with AI-powere
 
 ## 📷 App Overview
 
-HealthDetect AI simplifies medical triage—with just a photo. Upload or capture an image, receive top‑3 likely skin conditions or injuries, download results as PDF, and manage your session securely.
+HealthDetect AI simplifies medical triage - with just a photo. Upload or capture an image, receive top‑3 likely skin conditions or injuries, download results as PDF, and manage your session securely.
 
 ---
 
@@ -237,7 +237,7 @@ docker build -t healthdetect-backend:latest .
   - SSH into Hetzner
   - Pull latest code
   - Rebuild Docker container
-  - Restart container — always-warm, 0-sec cold start
+  - Restart container - always-warm, 0-sec cold start
 
 #### iOS App (App Store)
 ```bash
@@ -248,7 +248,7 @@ eas credentials
 eas build -p ios --profile production
 eas submit -p ios
 ```
-Managed via Expo EAS—no native code required.
+Managed via Expo EAS-no native code required.
 
 #### Android (Play Store)
 ```bash
@@ -268,7 +268,7 @@ eas submit -p android
 
 ## 👤 Developer & Contact
 
-**Vansh Gupta** — Full-stack AI/ML engineer & software developer.  
+**Vansh Gupta** - Full-stack AI/ML engineer & software developer.  
 GitHub: [@Vansh-Coder](https://github.com/Vansh-Coder)  
 Email: vgupta95@asu.edu
 
@@ -276,6 +276,6 @@ Email: vgupta95@asu.edu
 
 ## 📝 License
 
-MIT License — see [LICENSE](LICENSE) file.
+MIT License - see [LICENSE](LICENSE) file.
 
 ---
