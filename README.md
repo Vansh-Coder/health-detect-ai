@@ -4,8 +4,8 @@
       <a href="https://rag-project-blond.vercel.app">
         <img
           src="frontend/assets/AppIcon.png"
-          width="200"
-          height="200"
+          width="225"
+          height="225"
           alt="Health Detect AI app icon"
         />
       </a>
