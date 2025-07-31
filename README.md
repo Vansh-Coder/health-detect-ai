@@ -116,13 +116,13 @@
 
 ---
 
-# 🎯 HealthDetect AI
+## 📱 Live Demo
 
-Cross-platform mobile app (React Native 📱) that empowers users with AI-powered skin and injury diagnosis. Launched on the App Store, Android version ready for release.
+💻&nbsp;&nbsp;[**Launch the App in browser ↗**](https://dummy-link.com)
 
 ---
 
-## ✨ Highlights
+## 🎯 Highlights
 
 - **Zero-shot image diagnosis using CLIP** - 85% accuracy on 200-image test set across **6 skin** and **7 injury** categories (e.g. eczema, acne, bruises, burns).
 - **Lightning-fast inference:** top-3 predictions in under **5 seconds**.
