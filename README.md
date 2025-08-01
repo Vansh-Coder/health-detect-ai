@@ -116,9 +116,11 @@
 
 ---
 
-## 📱 Live Demo
+## 📱 App Preview
 
-💻&nbsp;&nbsp;[**Launch the App in browser ↗**](https://dummy-link.com)
+A quick look at the app in action:
+
+![App Preview](/AppPreview/AppPreview.gif)
 
 ---
 
