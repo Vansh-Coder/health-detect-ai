@@ -120,9 +120,7 @@
 
 A quick look at the app in action:
 
-<p align="center">
-  <img src="appPreview/AppPreview.gif" alt="App Preview" width="200" />
-</p>
+<img src="appPreview/AppPreview.gif" alt="App Preview" width="250" />
 
 ---
 
