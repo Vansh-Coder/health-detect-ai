@@ -120,7 +120,7 @@
 
 A quick look at the app in action:
 
-![App Preview](/AppPreview/AppPreview.gif)
+![App Preview](/appPreview/AppPreview.gif)
 
 ---
 
