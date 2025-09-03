@@ -40,10 +40,6 @@
       </p>
       <p style="margin: 4px 0;">
         <img
-          src="https://img.shields.io/badge/npm-CB3837.svg?style=flat-square&logo=npm&logoColor=white"
-          alt="npm"
-        />
-        <img
           src="https://img.shields.io/badge/Node.js-339933.svg?style=flat-square&logo=node.js&logoColor=white"
           alt="Node.js"
         />
